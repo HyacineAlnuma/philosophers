@@ -6,7 +6,7 @@
 #    By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/19 16:32:21 by halnuma           #+#    #+#              #
-#    Updated: 2025/02/19 16:40:04 by halnuma          ###   ########.fr        #
+#    Updated: 2025/02/19 17:01:39 by halnuma          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,7 +28,7 @@ _BOLD			= \e[1m
 
 NAME			= philo_bonus
 CC 				= cc
-CFLAGS 			= -Wall -Wextra -Werror
+CFLAGS 			= -Wall -Wextra -Werror -pthread
 
 # ----- PATHS ----- #
 
@@ -37,7 +37,7 @@ P_SRC			= src/
 
 # ----- FILES ----- #
 
-MAIN 			= main
+MAIN 			= main			philo_utils
 
 HDR_SRC			= philo
 
