@@ -6,11 +6,11 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 16:57:16 by halnuma           #+#    #+#             */
-/*   Updated: 2025/02/19 17:03:33 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/02/21 09:19:01 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "philo_bonus.h"
 
 int	ft_isdigit(int c)
 {

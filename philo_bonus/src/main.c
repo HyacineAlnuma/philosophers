@@ -6,11 +6,11 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 16:28:45 by halnuma           #+#    #+#             */
-/*   Updated: 2025/02/19 17:03:40 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/02/21 09:18:52 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "philo_bonus.h"
 
 int	main(int ac, char **av)
 {

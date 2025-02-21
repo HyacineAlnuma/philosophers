@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 16:57:16 by halnuma           #+#    #+#             */
-/*   Updated: 2025/02/19 17:02:48 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/02/21 11:19:10 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,9 @@ int	ft_isdigit(int c)
 
 int	ft_atoi(const char *nptr)
 {
-	int	i;
-	int	sign;
-	int	result;
+	time_t	i;
+	int		sign;
+	int		result;
 
 	sign = 1;
 	i = 0;
@@ -47,12 +47,17 @@ int	ft_atoi(const char *nptr)
 	return (result * sign);
 }
 
+/* TODO : check nb
+			si < 0 si > ?
+		si time to sleep > time to die error
+*/
+
 void	init_ruleset(t_rules *ruleset, char **av)
 {
 	ruleset->philo_nb = ft_atoi(av[1]);
-	ruleset->time_to_die = ft_atoi(av[2]);
-	ruleset->time_to_eat = ft_atoi(av[3]);
-	ruleset->time_to_sleep = ft_atoi(av[4]);
+	ruleset->t_die = ft_atoi(av[2]);
+	ruleset->t_eat = ft_atoi(av[3]);
+	ruleset->t_sleep = ft_atoi(av[4]);
 	if (av[5])
 		ruleset->meals_nb = ft_atoi(av[5]);
 	else
