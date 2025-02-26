@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 11:54:02 by halnuma           #+#    #+#             */
-/*   Updated: 2025/02/21 13:12:23 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/02/26 13:35:37 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,20 @@
 void	update_time(struct timeval *tv, t_philo *philo)
 {
 	gettimeofday(tv, NULL);
+	pthread_mutex_lock(&philo->t_current_mutex);
+	pthread_mutex_lock(&philo->t_start_mutex);
+	pthread_mutex_lock(&philo->timestamp_mutex);
 	philo->t_current = (tv->tv_sec * 1000) + (tv->tv_usec / 1000);
 	philo->timestamp = philo->t_current - philo->t_start;
+	pthread_mutex_unlock(&philo->t_current_mutex);
+	pthread_mutex_unlock(&philo->t_start_mutex);
+	pthread_mutex_unlock(&philo->timestamp_mutex);
 }
 
 int	p_eat(struct timeval *tv, t_philo *philo)
 {
 	update_time(tv, philo);
-	printf("[%ldms] - %d is eating\n", philo->timestamp, philo->id);
+	printf("%s[%ldms] - %d is eating%s\n", C_GRN, philo->timestamp, philo->id, C_END);
 	usleep(philo->ut_eat);
 	update_time(tv, philo);
 	philo->t_last_meal = philo->t_current;
@@ -32,7 +38,7 @@ int	p_eat(struct timeval *tv, t_philo *philo)
 int	p_sleep(struct timeval *tv, t_philo *philo)
 {
 	update_time(tv, philo);
-	printf("[%ldms] - %d is sleeping\n", philo->timestamp, philo->id);
+	printf("%s[%ldms] - %d is sleeping%s\n", C_CYN, philo->timestamp, philo->id, C_END);
 	usleep(philo->ut_sleep);
 	return (0);
 }
@@ -40,18 +46,18 @@ int	p_sleep(struct timeval *tv, t_philo *philo)
 int	p_think(struct timeval *tv, t_philo *philo)
 {
 	update_time(tv, philo);
-	printf("[%ldms] - %d is thinking\n", philo->timestamp, philo->id);
+	printf("%s[%ldms] - %d is thinking%s\n", C_YEL, philo->timestamp, philo->id, C_END);
 	return (0);
 }
 
 void	p_init(struct timeval *tv, t_philo *philo)
 {
-	philo->is_alive = 1;
 	philo->ut_sleep = philo->ruleset->t_sleep * 1000;
 	philo->ut_eat = philo->ruleset->t_eat * 1000;
 	gettimeofday(tv, NULL);
 	philo->t_start = (tv->tv_sec * 1000) + (tv->tv_usec / 1000);
 	philo->t_last_meal = philo->t_start;
 	philo->timestamp = 0;
+	philo->alive = 1;
 	printf("[%ldms] - %d is awake\n", philo->timestamp, philo->id);
 }
