@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 11:54:02 by halnuma           #+#    #+#             */
-/*   Updated: 2025/02/28 11:49:50 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/02/28 15:22:08 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,9 @@ void	update_time(t_philo *philo)
 int	p_eat(t_philo *philo)
 {
 	update_time(philo);
-	printf("%s[%ldms] - %d is eating%s\n", C_GRN, philo->timestamp, philo->id, C_END);
-	usleep(philo->ut_eat);
-	update_time(philo);
 	philo->t_last_meal = philo->t_current;
+	printf("%s[%ldms] - %d is eating MEAL:%ld CUR:%ld START:%ld%s\n", C_GRN, philo->timestamp, philo->id, (philo->t_last_meal), philo->t_current, philo->t_start, C_END);
+	usleep(philo->ut_eat);
 	return (0);
 }
 
@@ -42,7 +41,7 @@ int	p_sleep(t_philo *philo)
 int	p_think(t_philo *philo)
 {
 	update_time(philo);
-	printf("%s[%ldms] - %d is thinking%s\n", C_YEL, philo->timestamp, philo->id, C_END);
+	printf("%s[%ldms] - %d is thinking%s\n", C_MAG, philo->timestamp, philo->id, C_END);
 	return (0);
 }
 

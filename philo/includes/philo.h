@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 16:30:26 by halnuma           #+#    #+#             */
-/*   Updated: 2025/02/28 12:03:01 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/02/28 14:57:11 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@
 
 typedef struct s_rules
 {
-	pthread_mutex_t	rules_mutex;
+	// pthread_mutex_t	rules_mutex;
 	int				philo_nb;
 	int				philo_alive;
 	time_t			t_die;
@@ -39,14 +39,9 @@ typedef struct s_rules
 	int				meals_nb;
 }	t_rules;
 
-typedef struct s_fork
-{
-	pthread_mutex_t	fork_mutex;
-	int				id;
-}	t_fork;
-
 typedef struct s_philo
 {
+	pthread_t	tid;
 	int		id;
 	time_t	t_start;
 	time_t	t_current;
@@ -55,7 +50,8 @@ typedef struct s_philo
 	time_t	ut_sleep;
 	time_t	ut_eat;
 	t_rules	*ruleset;
-	t_fork	*fork;
+	pthread_mutex_t	*l_fork;
+	pthread_mutex_t	*r_fork;
 	int		is_alive;
 }	t_philo;
 
