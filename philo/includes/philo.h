@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 16:30:26 by halnuma           #+#    #+#             */
-/*   Updated: 2025/02/26 13:35:08 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/02/28 10:04:41 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,21 +47,21 @@ typedef struct s_fork
 
 typedef struct s_philo
 {
-	pthread_mutex_t	id_mutex;
+	pthread_mutex_t	philo_mutex;
 	int		id;
-	pthread_mutex_t	t_start_mutex;
+	// pthread_mutex_t	t_start_mutex;
 	time_t	t_start;
-	pthread_mutex_t	t_current_mutex;
+	// pthread_mutex_t	t_current_mutex;
 	time_t	t_current;
-	pthread_mutex_t	t_last_meal_mutex;
+	// pthread_mutex_t	t_last_meal_mutex;
 	time_t	t_last_meal;
-	pthread_mutex_t	timestamp_mutex;
+	// pthread_mutex_t	timestamp_mutex;
 	time_t	timestamp;
 	time_t	ut_sleep;
 	time_t	ut_eat;
 	t_rules	*ruleset;
 	t_fork	*fork;
-	pthread_mutex_t	alive_mutex;
+	// pthread_mutex_t	alive_mutex;
 	int		alive;
 }	t_philo;
 

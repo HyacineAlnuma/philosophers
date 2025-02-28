@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 17:07:44 by halnuma           #+#    #+#             */
-/*   Updated: 2025/02/26 14:18:27 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/02/28 10:08:45 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,9 +67,9 @@ int	try_to_eat(struct timeval *tv, t_philo *philo)
 	// if (!philo->ruleset->philo_alive)
 	// 	return (0);
 	//pthread_mutex_lock(&philo->alive_mutex);
-	printf("test\n");
-	if (!philo->alive)
-		return (0);
+	// printf("test\n");
+	// if (!philo->alive)
+	// 	return (0);
 	//pthread_mutex_unlock(&philo->alive_mutex);
 	// pthread_mutex_unlock(&philo->ruleset->alive_mutex);
 	//printf("PHILO:%d  as taken RIGHT FORK:%d\n", philo->id, philo->fork[right_fork].id);
@@ -122,51 +122,51 @@ void	p_live(struct timeval *tv, t_philo *philo)
 	}
 }
 
-void	*monitor(void *data)
-{
-	struct timeval	tv;
-	t_philo			*philo;
+// void	*monitor(void *data)
+// {
+// 	struct timeval	tv;
+// 	t_philo			*philo;
 
-	philo = (t_philo *)data;
-	while (1)
-	{
-		usleep(1000);
-		update_time(&tv, philo);
-		pthread_mutex_lock(&philo->t_last_meal_mutex);
-		pthread_mutex_lock(&philo->t_current_mutex);
-		pthread_mutex_lock(&philo->timestamp_mutex);
-		if ((philo->t_current - philo->t_last_meal) > philo->ruleset->t_die)
-		{
-			printf("%s[%ldms] - %d died%s\n", C_RED, philo->timestamp, philo->id, C_END);
-			//exit(EXIT_SUCCESS);
-			//pthread_mutex_lock(&philo->alive_mutex);
-			philo->alive = 0;
-			//pthread_mutex_unlock(&philo->alive_mutex);
-			pthread_mutex_unlock(&philo->t_last_meal_mutex);
-			pthread_mutex_unlock(&philo->t_current_mutex);
-			pthread_mutex_unlock(&philo->timestamp_mutex);
-			return (NULL);
-			// pthread_mutex_lock(&philo->ruleset->alive_mutex);
-			// philo->ruleset->philo_alive = 0;
-			// pthread_mutex_unlock(&philo->ruleset->alive_mutex);
-		}
-		pthread_mutex_unlock(&philo->t_last_meal_mutex);
-		pthread_mutex_unlock(&philo->t_current_mutex);
-		pthread_mutex_unlock(&philo->timestamp_mutex);
-	}
-}
+// 	philo = (t_philo *)data;
+// 	while (1)
+// 	{
+// 		usleep(1000);
+// 		update_time(&tv, philo);
+// 		pthread_mutex_lock(&philo->t_last_meal_mutex);
+// 		pthread_mutex_lock(&philo->t_current_mutex);
+// 		pthread_mutex_lock(&philo->timestamp_mutex);
+// 		if ((philo->t_current - philo->t_last_meal) > philo->ruleset->t_die)
+// 		{
+// 			printf("%s[%ldms] - %d died%s\n", C_RED, philo->timestamp, philo->id, C_END);
+// 			//exit(EXIT_SUCCESS);
+// 			//pthread_mutex_lock(&philo->alive_mutex);
+// 			philo->alive = 0;
+// 			//pthread_mutex_unlock(&philo->alive_mutex);
+// 			pthread_mutex_unlock(&philo->t_last_meal_mutex);
+// 			pthread_mutex_unlock(&philo->t_current_mutex);
+// 			pthread_mutex_unlock(&philo->timestamp_mutex);
+// 			return (NULL);
+// 			// pthread_mutex_lock(&philo->ruleset->alive_mutex);
+// 			// philo->ruleset->philo_alive = 0;
+// 			// pthread_mutex_unlock(&philo->ruleset->alive_mutex);
+// 		}
+// 		pthread_mutex_unlock(&philo->t_last_meal_mutex);
+// 		pthread_mutex_unlock(&philo->t_current_mutex);
+// 		pthread_mutex_unlock(&philo->timestamp_mutex);
+// 	}
+// }
 
 void	*start_routine(void *data)
 {
 	struct timeval	tv;
 	t_philo			*philo;
-	pthread_t		tid;
+	//pthread_t		tid;
 
 	philo = (t_philo *)data;
 	p_init(&tv, philo);
-	pthread_create(&tid, NULL, monitor, &philo);
+	//pthread_create(&tid, NULL, monitor, &philo);
 	p_live(&tv, philo);
-	pthread_join(tid, NULL);
+	//pthread_join(tid, NULL);
 	return (NULL);
 }
 
@@ -183,12 +183,13 @@ void	create_threads(t_rules *ruleset)
 	{
 		fork[i + 1].id = i + 1;
 		pthread_mutex_init(&fork[i + 1].id_mutex, NULL);
-		pthread_mutex_init(&philo[i].id_mutex, NULL);
-		pthread_mutex_init(&philo[i].t_current_mutex, NULL);
-		pthread_mutex_init(&philo[i].t_last_meal_mutex, NULL);
-		pthread_mutex_init(&philo[i].t_start_mutex, NULL);
-		pthread_mutex_init(&philo[i].timestamp_mutex, NULL);
-		pthread_mutex_init(&philo[i].alive_mutex, NULL);
+		// pthread_mutex_init(&philo[i].id_mutex, NULL);
+		// pthread_mutex_init(&philo[i].t_current_mutex, NULL);
+		// pthread_mutex_init(&philo[i].t_last_meal_mutex, NULL);
+		// pthread_mutex_init(&philo[i].t_start_mutex, NULL);
+		// pthread_mutex_init(&philo[i].timestamp_mutex, NULL);
+		// pthread_mutex_init(&philo[i].alive_mutex, NULL);
+		pthread_mutex_lock(&philo->philo_mutex);
 		philo[i].ruleset = ruleset;
 		philo[i].id = i + 1;
 		philo[i].fork = fork;
@@ -197,12 +198,13 @@ void	create_threads(t_rules *ruleset)
 	}
 	while (--i >= 0)
 	{
-		pthread_mutex_destroy(&philo[i].t_current_mutex);
-		pthread_mutex_destroy(&philo[i].t_last_meal_mutex);
-		pthread_mutex_destroy(&philo[i].t_start_mutex);
-		pthread_mutex_destroy(&philo[i].timestamp_mutex);
-		pthread_mutex_destroy(&philo[i].id_mutex);
-		pthread_mutex_destroy(&philo[i].alive_mutex);
+		// pthread_mutex_destroy(&philo[i].t_current_mutex);
+		// pthread_mutex_destroy(&philo[i].t_last_meal_mutex);
+		// pthread_mutex_destroy(&philo[i].t_start_mutex);
+		// pthread_mutex_destroy(&philo[i].timestamp_mutex);
+		// pthread_mutex_destroy(&philo[i].id_mutex);
+		// pthread_mutex_destroy(&philo[i].alive_mutex);
+		pthread_mutex_destroy(&philo[i].philo_mutex);
 		pthread_mutex_destroy(&fork[i + 1].id_mutex);
 		pthread_join(tid[i], NULL);
 		// pthread_join(tmid[i], NULL);
