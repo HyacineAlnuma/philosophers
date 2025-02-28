@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 11:54:02 by halnuma           #+#    #+#             */
-/*   Updated: 2025/02/28 10:26:42 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/02/28 10:28:27 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,16 +15,8 @@
 void	update_time(struct timeval *tv, t_philo *philo)
 {
 	gettimeofday(tv, NULL);
-	// pthread_mutex_lock(&philo->t_current_mutex);
-	// pthread_mutex_lock(&philo->t_start_mutex);
-	// pthread_mutex_lock(&philo->timestamp_mutex);
-	// pthread_mutex_lock(&philo->philo_mutex);
 	philo->t_current = (tv->tv_sec * 1000) + (tv->tv_usec / 1000);
 	philo->timestamp = philo->t_current - philo->t_start;
-	// pthread_mutex_unlock(&philo->t_current_mutex);
-	// pthread_mutex_unlock(&philo->t_start_mutex);
-	// pthread_mutex_unlock(&philo->timestamp_mutex);
-	// pthread_mutex_unlock(&philo->philo_mutex);
 }
 
 int	p_eat(struct timeval *tv, t_philo *philo)
