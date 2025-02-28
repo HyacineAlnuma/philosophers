@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 16:30:26 by halnuma           #+#    #+#             */
-/*   Updated: 2025/02/28 10:04:41 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/02/28 10:24:07 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ typedef struct s_philo
 	t_rules	*ruleset;
 	t_fork	*fork;
 	// pthread_mutex_t	alive_mutex;
-	int		alive;
+	int		is_alive;
 }	t_philo;
 
 void	init_ruleset(t_rules *ruleset, char **av);
