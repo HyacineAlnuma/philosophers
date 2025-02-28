@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 16:30:26 by halnuma           #+#    #+#             */
-/*   Updated: 2025/02/28 10:28:38 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/02/28 12:03:01 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@
 
 typedef struct s_rules
 {
-	pthread_mutex_t	alive_mutex;
+	pthread_mutex_t	rules_mutex;
 	int				philo_nb;
 	int				philo_alive;
 	time_t			t_die;
@@ -41,7 +41,7 @@ typedef struct s_rules
 
 typedef struct s_fork
 {
-	pthread_mutex_t	id_mutex;
+	pthread_mutex_t	fork_mutex;
 	int				id;
 }	t_fork;
 
@@ -61,10 +61,10 @@ typedef struct s_philo
 
 void	init_ruleset(t_rules *ruleset, char **av);
 void	create_threads(t_rules *ruleset);
-void	update_time(struct timeval *tv, t_philo *philo);
-int		p_eat(struct timeval *tv, t_philo *philo);
-int		p_sleep(struct timeval *tv, t_philo *philo);
-int		p_think(struct timeval *tv, t_philo *philo);
-void	p_init(struct timeval *tv, t_philo *philo);
+void	update_time(t_philo *philo);
+int		p_eat(t_philo *philo);
+int		p_sleep(t_philo *philo);
+int		p_think(t_philo *philo);
+void	p_init(t_philo *philo);
 
 #endif
