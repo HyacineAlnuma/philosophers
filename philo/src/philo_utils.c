@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 16:57:16 by halnuma           #+#    #+#             */
-/*   Updated: 2025/02/28 10:47:26 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/03/03 11:54:42 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,6 @@ int	ft_atoi(const char *nptr)
 void	init_ruleset(t_rules *ruleset, char **av)
 {
 	ruleset->philo_nb = ft_atoi(av[1]);
-	ruleset->philo_alive = 1;
 	ruleset->t_die = ft_atoi(av[2]);
 	ruleset->t_eat = ft_atoi(av[3]);
 	ruleset->t_sleep = ft_atoi(av[4]);

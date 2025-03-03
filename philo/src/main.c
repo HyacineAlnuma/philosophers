@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 16:28:45 by halnuma           #+#    #+#             */
-/*   Updated: 2025/02/19 18:01:42 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/03/03 12:38:06 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,11 @@ int	main(int ac, char **av)
 		return (1);
 	if (ac == 5 || ac == 6)
 	{
+		if (ac == 6 && ft_atoi(av[5]) == 0)
+		{
+			free(ruleset);
+			return (0);
+		}
 		init_ruleset(ruleset, av);
 		create_threads(ruleset);
 	}
