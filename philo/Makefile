@@ -6,7 +6,7 @@
 #    By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/19 16:32:21 by halnuma           #+#    #+#              #
-#    Updated: 2025/02/28 12:06:20 by halnuma          ###   ########.fr        #
+#    Updated: 2025/03/03 13:12:31 by halnuma          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,7 +29,7 @@ _BOLD			= \e[1m
 NAME			= philo
 CC 				= cc
 CFLAGS 			= -Wall -Wextra -Werror -pthread
-# TFLAGS 			= -fsanitize=thread -g
+TFLAGS 			= -fsanitize=thread -g
 
 # ----- PATHS ----- #
 
