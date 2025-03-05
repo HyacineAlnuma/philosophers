@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 16:30:26 by halnuma           #+#    #+#             */
-/*   Updated: 2025/03/03 13:00:46 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/03/05 13:28:00 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,25 +42,27 @@ typedef struct s_philo
 	pthread_t		tid;
 	int				id;
 	int				meals_nb;
+	int				*alive;
+	int				*meals_eaten;
 	time_t			t_start;
 	time_t			t_current;
 	time_t			t_last_meal;
-	time_t			timestamp;
+	time_t			ts;
 	time_t			ut_sleep;
 	time_t			ut_eat;
 	t_rules			*ruleset;
 	pthread_mutex_t	*l_fork;
 	pthread_mutex_t	*r_fork;
 	pthread_mutex_t	*alive_mutex;
-	int				*alive;
+	pthread_mutex_t	time_mutex;
+	pthread_mutex_t	*print_mutex;
 	pthread_mutex_t	*meals_mutex;
-	int				*meals_eaten;
 }	t_philo;
 
 typedef struct s_monitor
 {
 	t_philo			*philo;
-	int				philo_id;
+	pthread_mutex_t	print_mutex;
 	pthread_mutex_t	alive_mutex;
 	int				alive;
 	pthread_mutex_t	meals_mutex;
@@ -76,5 +78,6 @@ void	p_think(t_philo *philo);
 void	p_init(t_philo *philo, int id, t_rules *ruleset, pthread_mutex_t *fork, t_monitor *monitor);
 int		check_status(t_philo *philo);
 int		ft_atoi(const char *nptr);
+void	print_state(t_philo *philo, char *action, char *color);
 
 #endif
