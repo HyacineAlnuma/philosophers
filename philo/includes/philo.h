@@ -6,18 +6,12 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 16:30:26 by halnuma           #+#    #+#             */
-/*   Updated: 2025/03/05 13:28:00 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/03/07 09:46:25 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILO_H
 # define PHILO_H
-
-# include <stdio.h>
-# include <stdlib.h>
-# include <pthread.h>
-# include <sys/time.h>
-# include <unistd.h>
 
 # define C_END  "\x1B[0m"
 # define C_RED  "\x1B[31m"
@@ -27,6 +21,12 @@
 # define C_MAG  "\x1B[35m"
 # define C_CYN  "\x1B[36m"
 # define C_WHT  "\x1B[37m"
+
+# include <stdio.h>
+# include <stdlib.h>
+# include <pthread.h>
+# include <sys/time.h>
+# include <unistd.h>
 
 typedef struct s_rules
 {

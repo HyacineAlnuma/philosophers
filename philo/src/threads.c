@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 11:40:08 by halnuma           #+#    #+#             */
-/*   Updated: 2025/03/05 13:35:17 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/03/07 10:44:55 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ int	check_status(t_philo *philo)
 	}
 	pthread_mutex_unlock(philo->alive_mutex);
 	pthread_mutex_unlock(philo->meals_mutex);
-	(void)philo;
 	return (1);
 }
 
@@ -46,7 +45,7 @@ void	check_if_alive(t_philo *philo)
 
 void	check_if_all_meals_eaten(t_philo *philo)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (i < philo[0].ruleset->philo_nb)

@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 16:28:45 by halnuma           #+#    #+#             */
-/*   Updated: 2025/02/21 09:18:52 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/03/07 14:23:21 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ int	main(int ac, char **av)
 	if (ac == 5 || ac == 6)
 	{
 		init_ruleset(ruleset, av);
+		create_processes(ruleset);
 	}
 	else
 		printf("Error: Bad number of arguments.");

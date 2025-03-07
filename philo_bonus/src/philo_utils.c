@@ -6,11 +6,25 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 16:57:16 by halnuma           #+#    #+#             */
-/*   Updated: 2025/02/21 09:19:01 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/03/07 11:26:38 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
+
+int	ft_strcmp(const char *s1, const char *s2)
+{
+	size_t	i;
+
+	i = 0;
+	while (s1[i] && s2[i])
+	{
+		if ((unsigned char)s1[i] != (unsigned char)s2[i])
+			return ((unsigned char)s1[i] - (unsigned char)s2[i]);
+		i++;
+	}
+	return (0);
+}
 
 int	ft_isdigit(int c)
 {
@@ -49,11 +63,22 @@ int	ft_atoi(const char *nptr)
 void	init_ruleset(t_rules *ruleset, char **av)
 {
 	ruleset->philo_nb = ft_atoi(av[1]);
-	ruleset->time_to_die = ft_atoi(av[2]);
-	ruleset->time_to_eat = ft_atoi(av[3]);
-	ruleset->time_to_sleep = ft_atoi(av[4]);
+	ruleset->t_die = ft_atoi(av[2]);
+	ruleset->t_eat = ft_atoi(av[3]);
+	ruleset->t_sleep = ft_atoi(av[4]);
 	if (av[5])
 		ruleset->meals_nb = ft_atoi(av[5]);
 	else
 		ruleset->meals_nb = 0;
+}
+
+void	print_state(t_philo *philo, char *action, char *color)
+{
+	update_time(philo);
+	if (!ft_strcmp(action, "died"))
+		printf("%s[%ldms] - %d %s%s\n", color, philo->ts, philo->id, action, C_END);
+	else if (!check_status(philo))
+		return ;
+	else
+		printf("%s[%ldms] - %d %s%s\n", color, philo->ts, philo->id, action, C_END);
 }
