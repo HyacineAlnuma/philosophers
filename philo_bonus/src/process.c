@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 09:30:32 by halnuma           #+#    #+#             */
-/*   Updated: 2025/03/07 14:34:24 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/03/11 11:26:29 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,7 @@ void	kill_all_philos(t_philo *philo)
 
 	i = -1;
 	while (++i < philo->ruleset->philo_nb)
-	{
 		kill(philo->pid[i], SIGINT);
-	}
 }
 
 void	check_if_alive(t_philo *philo)
@@ -29,9 +27,10 @@ void	check_if_alive(t_philo *philo)
 	if ((philo->t_current - philo->t_last_meal) >= philo->ruleset->t_die)
 	{
 		*philo->alive = 0;
+		// printf("yo %ld\n", (philo->t_current - philo->t_last_meal));
 		print_state(philo, "died", C_RED);
-		// kill_all_philos(philo);
-		return ;
+		kill_all_philos(philo);
+		exit(EXIT_SUCCESS);
 	}
 }
 
@@ -61,17 +60,29 @@ int	check_status(t_philo *philo)
 	return (1);
 }
 
-void	process_philo(t_philo *philo, sem_t *forks)
+void	*death_checker(void *data)
 {
-	while (philo->alive)
+	t_philo	*philo;
+
+	philo = (t_philo *)data;
+	while (1)
+		check_if_alive(philo);
+	return (NULL);
+}
+
+void	process_philo(t_philo *philo)
+{
+	pthread_t	monitor_tid;
+
+	pthread_create(&monitor_tid, NULL, death_checker, philo);
+	pthread_detach(monitor_tid);
+	while (check_status(philo))
 	{
-		p_eat(philo, forks);
+		p_eat(philo);
 		p_sleep(philo);
 		p_think(philo);
 	}
-	// kill_all_philos(philo);
-	// sem_close(forks);
-	exit (EXIT_SUCCESS);
+	exit(EXIT_SUCCESS);
 }
 
 void	*monitor_routine(void *data)
@@ -100,49 +111,73 @@ void	*monitor_routine(void *data)
 	return (NULL);
 }
 
+void	*meals_monitor(void *data)
+{
+	t_philo	*philo;
+
+	philo = (t_philo *)data;
+	sem_wait(philo->sems->s_meals);
+	kill_all_philos(philo);
+	return (NULL);
+}
+
 void	create_processes(t_rules *ruleset)
 {
 	t_monitor	monitor;
 	pthread_t	monitor_tid;
 	t_philo		philo[1024];
-	// pid_t		pids[1024];
-	sem_t		*forks;
+	t_sem		sems;
 	int			i;
 
 	monitor.alive = 1;
 	monitor.meals_eaten = 0;
 	monitor.philo = philo;
 	sem_unlink("/forks");
-	forks = sem_open("/forks", O_CREAT | O_EXCL, 0666, ruleset->philo_nb);
-	if (forks == SEM_FAILED)
+	sem_unlink("/death");
+	sem_unlink("/meals");
+	sems.s_forks = sem_open("/forks", O_CREAT | O_EXCL, 0666, ruleset->philo_nb);
+	if (sems.s_forks == SEM_FAILED)
 	{
 		perror("sem_open");
 		exit(1);
 	}
-	// sem_wait(forks);
-	// printf("yo\n");
-	// sem_post(forks);
-	// sem_init(&forks, 1, ruleset->philo_nb);
+	sems.s_death = sem_open("/death", O_CREAT | O_EXCL, 0666, 1);
+	if (sems.s_death == SEM_FAILED)
+	{
+		perror("sem_open");
+		exit(1);
+	}
+	sems.s_meals = sem_open("/meals", O_CREAT | O_EXCL, 0666, (ruleset->philo_nb * -1) + 2);
+	if (sems.s_death == SEM_FAILED)
+	{
+		perror("sem_open");
+		exit(1);
+	}
 	i = -1;
 	while (++i < ruleset->philo_nb)
 	{
 		philo[i].pid = monitor.pids;
+		philo[i].sems = &sems;
 		p_init(&philo[i], (i + 1), ruleset, &monitor);
 		philo[i].pid[i] = fork();
 		if (philo[i].pid[i] == -1)
 			return ;
 		else if (philo[i].pid[i] == 0)
 		{
-			process_philo(&philo[i], forks);
+			process_philo(&philo[i]);
 		}
 	}
-	pthread_create(&monitor_tid, NULL, monitor_routine, &monitor);
-	pthread_join(monitor_tid, NULL);
-	// (void)monitor_tid;
+	// pthread_create(&monitor_tid, NULL, meals_monitor, &sems);
+	// pthread_detach(monitor_tid);
+	(void)monitor_tid;
 	i = -1;
 	while (++i < ruleset->philo_nb)
 		waitpid(philo[i].pid[i], NULL, 0);
-	sem_close(forks);
+	sem_close(sems.s_forks);
+	sem_close(sems.s_death);
+	sem_close(sems.s_meals);
 	sem_unlink("/forks");
+	sem_unlink("/meals");
+	sem_unlink("/death");
 }
 

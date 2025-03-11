@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 11:54:02 by halnuma           #+#    #+#             */
-/*   Updated: 2025/03/07 12:08:53 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/03/11 11:26:48 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,16 +21,19 @@ void	update_time(t_philo *philo)
 	philo->ts = philo->t_current - philo->t_start;
 }
 
-void	p_eat(t_philo *philo, sem_t *forks)
+void	p_eat(t_philo *philo)
 {
-	sem_wait(forks);
+	sem_wait(philo->sems->s_forks);
 	print_state(philo, "has taken a fork", C_YEL);
-	sem_wait(forks);
+	sem_wait(philo->sems->s_forks);
 	print_state(philo, "has taken a fork", C_YEL);
 	print_state(philo, "is eating", C_GRN);
+	philo->t_last_meal = philo->t_current;
+	philo->meals_nb++;
+	//sem_post(philo->sems->s_meals);
 	usleep(philo->ut_eat);
-	sem_post(forks);
-	sem_post(forks);
+	sem_post(philo->sems->s_forks);
+	sem_post(philo->sems->s_forks);
 }
 
 void	p_sleep(t_philo *philo)
@@ -49,6 +52,8 @@ void	p_init(t_philo *philo, int id, t_rules *ruleset, t_monitor *monitor)
 	struct timeval	tv;
 
 	philo->ruleset = ruleset;
+	philo->t_current = 0;
+	philo->t_last_meal = 0;
 	philo->id = id;
 	philo->ut_sleep = philo->ruleset->t_sleep * 1000;
 	philo->ut_eat = philo->ruleset->t_eat * 1000;

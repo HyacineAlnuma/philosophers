@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 11:40:08 by halnuma           #+#    #+#             */
-/*   Updated: 2025/03/07 10:44:55 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/03/11 10:22:59 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,9 @@ void	*monitor_routine(void *data)
 	}
 	return (NULL);
 }
+
+/* TODO : protect thread creation and join?
+*/
 
 void	create_threads(t_rules *ruleset)
 {

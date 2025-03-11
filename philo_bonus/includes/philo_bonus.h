@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 16:30:26 by halnuma           #+#    #+#             */
-/*   Updated: 2025/03/07 12:22:21 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/03/11 11:16:25 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,13 @@ typedef struct s_rules
 	int	meals_nb;
 }	t_rules;
 
+typedef struct s_sem
+{
+	sem_t	*s_forks;
+	sem_t	*s_death;
+	sem_t	*s_meals;
+}	t_sem;
+
 typedef struct s_philo
 {
 	pid_t	*pid;
@@ -56,6 +63,7 @@ typedef struct s_philo
 	time_t	ut_sleep;
 	time_t	ut_eat;
 	t_rules	*ruleset;
+	t_sem	*sems;
 }	t_philo;
 
 typedef struct s_monitor
@@ -68,7 +76,7 @@ typedef struct s_monitor
 
 void	init_ruleset(t_rules *ruleset, char **av);
 void	create_processes(t_rules *ruleset);
-void	p_eat(t_philo *philo, sem_t *forks);
+void	p_eat(t_philo *philo);
 void	p_sleep(t_philo *philo);
 void	p_think(t_philo *philo);
 void	p_init(t_philo *philo, int id, t_rules *ruleset, t_monitor *monitor);

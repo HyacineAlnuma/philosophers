@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 16:57:16 by halnuma           #+#    #+#             */
-/*   Updated: 2025/03/07 11:26:38 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/03/11 11:09:31 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,10 +75,9 @@ void	init_ruleset(t_rules *ruleset, char **av)
 void	print_state(t_philo *philo, char *action, char *color)
 {
 	update_time(philo);
+	sem_wait(philo->sems->s_death);
+	printf("%s[%ldms] - %d %s%s\n", color, philo->ts, philo->id, action, C_END);
 	if (!ft_strcmp(action, "died"))
-		printf("%s[%ldms] - %d %s%s\n", color, philo->ts, philo->id, action, C_END);
-	else if (!check_status(philo))
 		return ;
-	else
-		printf("%s[%ldms] - %d %s%s\n", color, philo->ts, philo->id, action, C_END);
+	sem_post(philo->sems->s_death);
 }
