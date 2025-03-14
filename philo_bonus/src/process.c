@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 09:30:32 by halnuma           #+#    #+#             */
-/*   Updated: 2025/03/14 10:14:59 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/03/14 17:36:07 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,7 +132,7 @@ void	create_processes(t_rules *ruleset)
 {
 	t_monitor	monitor;
 	pthread_t	monitor_tid;
-	t_philo		philo[1024];
+	t_philo		philo[PHILO_MAX];
 	t_sem		sems;
 	int			i;
 

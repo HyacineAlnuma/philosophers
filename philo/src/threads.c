@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 11:40:08 by halnuma           #+#    #+#             */
-/*   Updated: 2025/03/14 13:05:09 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/03/14 17:35:37 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,8 @@ void	*philo_routine(void *data)
 	t_philo			*philo;
 
 	philo = (t_philo *)data;
+	// philo->t_start = get_current_time();   // A rajouter potentiellement
+	// philo->t_last_meal = philo->t_start;	  // "
 	if (philo->id % 2 == 0)
 		usleep(1000);
 	while (1)
@@ -104,8 +106,8 @@ void	*monitor_routine(void *data)
 void	create_threads(t_rules *ruleset)
 {
 	int				i;
-	t_philo			philo[1024];
-	pthread_mutex_t	forks[1024];
+	t_philo			philo[PHILO_MAX];
+	pthread_mutex_t	forks[PHILO_MAX];
 	t_monitor		monitor;
 	pthread_t		monitor_tid;
 
@@ -124,14 +126,12 @@ void	create_threads(t_rules *ruleset)
 	i = 0;
 	while (i < ruleset->philo_nb)
 	{
+		p_init(&philo[i], (i + 1), ruleset, &forks[i], &monitor);
 		if (i == ruleset->philo_nb - 1)
 			philo[i].r_fork = &forks[0];
 		else
 			philo[i].r_fork = &forks[i + 1];
-		p_init(&philo[i], (i + 1), ruleset, &forks[i], &monitor);
 		pthread_create(&philo[i].tid, NULL, philo_routine, &philo[i]);
-		// update_time(&philo[i]);
-		// printf("[%ldms] %d is awake\n", philo->ts, philo[i].id);
 		i++;
 	}
 	pthread_create(&monitor_tid, NULL, monitor_routine, &monitor);
@@ -149,50 +149,4 @@ void	create_threads(t_rules *ruleset)
 	pthread_mutex_destroy(&monitor.alive_mutex);
 	pthread_mutex_destroy(&monitor.meals_mutex);
 	pthread_mutex_destroy(&monitor.print_mutex);
-
-
-	// int				i;
-	// t_philo			philo[1024];
-	// pthread_mutex_t	forks[1024];
-	// t_monitor		monitor;
-	// pthread_t		monitor_tid;
-
-	// pthread_mutex_init(&monitor.alive_mutex, NULL);
-	// pthread_mutex_init(&monitor.meals_mutex, NULL);
-	// pthread_mutex_init(&monitor.print_mutex, NULL);
-	// monitor.alive = 1;
-	// monitor.meals_eaten = 0;
-	// monitor.philo = philo;
-	// i = 0;
-	// while (i < ruleset->philo_nb)
-	// {
-	// 	pthread_mutex_init(&forks[i], NULL);
-	// 	i++;
-	// }
-	// i = 0;
-	// while (i < ruleset->philo_nb)
-	// {
-	// 	p_init(&philo[i], (i + 1), ruleset, &forks[i], &monitor);
-	// 	if (i == ruleset->philo_nb - 1)
-	// 		philo[i].r_fork = &forks[0];
-	// 	else
-	// 		philo[i].r_fork = &forks[i + 1];
-	// 	pthread_create(&philo[i].tid, NULL, philo_routine, &philo[i]);
-	// 	i++;
-	// }
-	// pthread_create(&monitor_tid, NULL, monitor_routine, &monitor);
-	// pthread_join(monitor_tid, NULL);
-	// while (--i >= 0)
-	// {
-	// 	pthread_detach(philo[i].tid);
-	// }
-	// while (i < ruleset->philo_nb)
-	// {
-	// 	pthread_mutex_destroy(&forks[i]);
-	// 	pthread_mutex_destroy(&philo[i].time_mutex);
-	// 	i++;
-	// }
-	// pthread_mutex_destroy(&monitor.alive_mutex);
-	// pthread_mutex_destroy(&monitor.meals_mutex);
-	// pthread_mutex_destroy(&monitor.print_mutex);
 }

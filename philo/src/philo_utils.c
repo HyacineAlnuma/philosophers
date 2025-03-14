@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 16:57:16 by halnuma           #+#    #+#             */
-/*   Updated: 2025/03/14 12:51:26 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/03/14 17:34:39 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,8 +61,7 @@ int	ft_atoi(const char *nptr)
 }
 
 /* TODO : check nb
-			si < 0 si > ?
-		si time to sleep > time to die error
+			si < 0 si > PHILO_MAX
 */
 
 void	init_ruleset(t_rules *ruleset, char **av)

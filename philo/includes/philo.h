@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 16:30:26 by halnuma           #+#    #+#             */
-/*   Updated: 2025/03/14 12:58:46 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/03/14 17:35:23 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@
 # define C_MAG  "\x1B[35m"
 # define C_CYN  "\x1B[36m"
 # define C_WHT  "\x1B[37m"
+
+# define PHILO_MAX  500
 
 # include <stdio.h>
 # include <stdlib.h>

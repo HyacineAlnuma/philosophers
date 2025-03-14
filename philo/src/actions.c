@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 11:54:02 by halnuma           #+#    #+#             */
-/*   Updated: 2025/03/14 13:05:26 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/03/14 13:54:55 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,17 +17,17 @@
 
 void	update_time(t_philo *philo)
 {
-	// struct timeval	tv;
+	struct timeval	tv;
 
-	// gettimeofday(&tv, NULL);
-	// pthread_mutex_lock(&philo->time_mutex);
-	// philo->t_current = ((&tv)->tv_sec * 1000) + ((&tv)->tv_usec / 1000);
-	// philo->ts = philo->t_current - philo->t_start;
-	// pthread_mutex_unlock(&philo->time_mutex);
+	gettimeofday(&tv, NULL);
 	pthread_mutex_lock(&philo->time_mutex);
-	philo->t_current = get_current_time();
+	philo->t_current = (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
 	philo->ts = philo->t_current - philo->t_start;
 	pthread_mutex_unlock(&philo->time_mutex);
+	// pthread_mutex_lock(&philo->time_mutex);
+	// philo->t_current = get_current_time();
+	// philo->ts = philo->t_current - philo->t_start;
+	// pthread_mutex_unlock(&philo->time_mutex);
 }
 
 size_t	get_current_time(void)
@@ -73,7 +73,7 @@ void	p_think(t_philo *philo)
 
 void	p_init(t_philo *philo, int id, t_rules *ruleset, pthread_mutex_t *fork, t_monitor *monitor)
 {
-	// struct timeval	tv;
+	struct timeval	tv;
 
 	philo->ruleset = ruleset;
 	philo->id = id;
@@ -85,9 +85,9 @@ void	p_init(t_philo *philo, int id, t_rules *ruleset, pthread_mutex_t *fork, t_m
 	philo->print_mutex = &monitor->print_mutex;
 	philo->ut_sleep = philo->ruleset->t_sleep * 1000;
 	philo->ut_eat = philo->ruleset->t_eat * 1000;
-	// gettimeofday(&tv, NULL);
-	// philo->t_start = ((&tv)->tv_sec * 1000) + ((&tv)->tv_usec / 1000);
-	// philo->t_last_meal = philo->t_start;
+	gettimeofday(&tv, NULL);
+	philo->t_start = ((&tv)->tv_sec * 1000) + ((&tv)->tv_usec / 1000);
+	philo->t_last_meal = philo->t_start;
 	philo->t_start = get_current_time();
 	philo->t_last_meal = philo->t_start;
 	philo->ts = 0;
