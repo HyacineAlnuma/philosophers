@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 11:54:02 by halnuma           #+#    #+#             */
-/*   Updated: 2025/03/11 11:26:48 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/03/14 10:15:29 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,11 @@ void	p_eat(t_philo *philo)
 	print_state(philo, "is eating", C_GRN);
 	philo->t_last_meal = philo->t_current;
 	philo->meals_nb++;
-	//sem_post(philo->sems->s_meals);
+	if (philo->meals_nb == philo->ruleset->meals_nb)
+	{
+		//sem_wait(philo->sems->s_write);
+		sem_post(philo->sems->s_meals);
+	}
 	usleep(philo->ut_eat);
 	sem_post(philo->sems->s_forks);
 	sem_post(philo->sems->s_forks);

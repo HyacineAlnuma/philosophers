@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 16:30:26 by halnuma           #+#    #+#             */
-/*   Updated: 2025/03/11 11:16:25 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/03/14 10:14:59 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ typedef struct s_rules
 typedef struct s_sem
 {
 	sem_t	*s_forks;
-	sem_t	*s_death;
+	sem_t	*s_write;
 	sem_t	*s_meals;
 }	t_sem;
 

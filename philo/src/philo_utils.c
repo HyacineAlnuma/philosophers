@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 16:57:16 by halnuma           #+#    #+#             */
-/*   Updated: 2025/03/07 10:42:17 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/03/14 12:51:26 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ void	print_state(t_philo *philo, char *action, char *color)
 		return ;
 	pthread_mutex_lock(&philo->time_mutex);
 	pthread_mutex_lock(philo->print_mutex);
-	printf("%s[%ldms] - %d %s%s\n", color, philo->ts, philo->id, action, C_END);
+	printf("[%ldms] - %s%d %s%s\n", philo->ts, color, philo->id, action, C_END);
 	pthread_mutex_unlock(&philo->time_mutex);
 	pthread_mutex_unlock(philo->print_mutex);
 }

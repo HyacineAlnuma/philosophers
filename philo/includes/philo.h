@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 16:30:26 by halnuma           #+#    #+#             */
-/*   Updated: 2025/03/07 09:46:25 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/03/14 12:58:46 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,5 +79,6 @@ void	p_init(t_philo *philo, int id, t_rules *ruleset, pthread_mutex_t *fork, t_m
 int		check_status(t_philo *philo);
 int		ft_atoi(const char *nptr);
 void	print_state(t_philo *philo, char *action, char *color);
+size_t	get_current_time(void);
 
 #endif

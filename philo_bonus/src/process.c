@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 09:30:32 by halnuma           #+#    #+#             */
-/*   Updated: 2025/03/11 11:26:29 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/03/14 10:14:59 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,10 +114,17 @@ void	*monitor_routine(void *data)
 void	*meals_monitor(void *data)
 {
 	t_philo	*philo;
+	int		finished_eating;
 
 	philo = (t_philo *)data;
-	sem_wait(philo->sems->s_meals);
-	kill_all_philos(philo);
+	finished_eating = 0;
+	while (1)
+	{
+		sem_wait(philo->sems->s_meals);
+		finished_eating++;
+		if (finished_eating == philo->ruleset->philo_nb)
+			kill_all_philos(philo);
+	}
 	return (NULL);
 }
 
@@ -141,14 +148,14 @@ void	create_processes(t_rules *ruleset)
 		perror("sem_open");
 		exit(1);
 	}
-	sems.s_death = sem_open("/death", O_CREAT | O_EXCL, 0666, 1);
-	if (sems.s_death == SEM_FAILED)
+	sems.s_write = sem_open("/death", O_CREAT | O_EXCL, 0666, 1);
+	if (sems.s_write == SEM_FAILED)
 	{
 		perror("sem_open");
 		exit(1);
 	}
-	sems.s_meals = sem_open("/meals", O_CREAT | O_EXCL, 0666, (ruleset->philo_nb * -1) + 2);
-	if (sems.s_death == SEM_FAILED)
+	sems.s_meals = sem_open("/meals", O_CREAT | O_EXCL, 0666, 0);
+	if (sems.s_meals == SEM_FAILED)
 	{
 		perror("sem_open");
 		exit(1);
@@ -167,17 +174,16 @@ void	create_processes(t_rules *ruleset)
 			process_philo(&philo[i]);
 		}
 	}
-	// pthread_create(&monitor_tid, NULL, meals_monitor, &sems);
-	// pthread_detach(monitor_tid);
-	(void)monitor_tid;
+	pthread_create(&monitor_tid, NULL, meals_monitor, &philo[0]);
+	pthread_detach(monitor_tid);
+	//(void)monitor_tid;
 	i = -1;
 	while (++i < ruleset->philo_nb)
 		waitpid(philo[i].pid[i], NULL, 0);
 	sem_close(sems.s_forks);
-	sem_close(sems.s_death);
+	sem_close(sems.s_write);
 	sem_close(sems.s_meals);
 	sem_unlink("/forks");
 	sem_unlink("/meals");
 	sem_unlink("/death");
 }
-
