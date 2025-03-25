@@ -6,77 +6,75 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 16:57:16 by halnuma           #+#    #+#             */
-/*   Updated: 2025/03/14 10:14:59 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/03/25 11:10:17 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
 
-int	ft_strcmp(const char *s1, const char *s2)
+void	kill_all_philos(t_philo *philo)
 {
-	size_t	i;
+	int	i;
 
-	i = 0;
-	while (s1[i] && s2[i])
-	{
-		if ((unsigned char)s1[i] != (unsigned char)s2[i])
-			return ((unsigned char)s1[i] - (unsigned char)s2[i]);
-		i++;
-	}
-	return (0);
+	i = -1;
+	while (++i < philo->ruleset->philo_nb)
+		kill(philo->pid[i], SIGINT);
 }
 
-int	ft_isdigit(int c)
+void	check_if_alive(t_philo *philo)
 {
-	if (c < '0' || c > '9')
+	update_time(philo);
+	if ((philo->t_current - philo->t_last_meal) >= philo->ruleset->t_die)
+	{
+		*philo->alive = 0;
+		// printf("yo %ld\n", (philo->t_current - philo->t_last_meal));
+		print_state(philo, "died", C_RED);
+		kill_all_philos(philo);
+		exit(EXIT_SUCCESS);
+	}
+}
+
+void	check_if_all_meals_eaten(t_philo *philo)
+{
+	int	i;
+
+	i = 0;
+	while (i < philo[0].ruleset->philo_nb)
+	{
+		if (philo[i].meals_nb < philo[0].ruleset->meals_nb)
+			return ;
+		i++;
+	}
+	*philo->meals_eaten = 1;
+	return ;
+}
+
+int	check_status(t_philo *philo)
+{
+	//check_if_alive(philo);
+	// check_if_all_meals_eaten(philo);
+	if (!(*philo->alive) || *philo->meals_eaten)
 	{
 		return (0);
 	}
 	return (1);
 }
 
-int	ft_atoi(const char *nptr)
+void	*death_checker(void *data)
 {
-	int	i;
-	int	sign;
-	int	result;
+	t_philo	*philo;
 
-	sign = 1;
-	i = 0;
-	result = 0;
-	while (nptr[i] == ' ' || (nptr[i] >= 9 && nptr[i] <= 13))
-		i++;
-	if (nptr[i] == '-' || nptr[i] == '+')
-	{
-		if (nptr[i] == '-')
-			sign *= -1;
-		i++;
-	}
-	while (ft_isdigit(nptr[i]))
-	{
-		result = result * 10 + (nptr[i] - '0');
-		i++;
-	}
-	return (result * sign);
-}
-
-void	init_ruleset(t_rules *ruleset, char **av)
-{
-	ruleset->philo_nb = ft_atoi(av[1]);
-	ruleset->t_die = ft_atoi(av[2]);
-	ruleset->t_eat = ft_atoi(av[3]);
-	ruleset->t_sleep = ft_atoi(av[4]);
-	if (av[5])
-		ruleset->meals_nb = ft_atoi(av[5]);
-	else
-		ruleset->meals_nb = 0;
+	philo = (t_philo *)data;
+	while (1)
+		check_if_alive(philo);
+	return (NULL);
 }
 
 void	print_state(t_philo *philo, char *action, char *color)
 {
 	update_time(philo);
 	sem_wait(philo->sems->s_write);
-	printf("%s[%ldms] - %d %s%s\n", color, philo->ts, philo->id, action, C_END);
+	printf("[%ldms] - %s%d %s%s\n", philo->ts, color, philo->id, action, C_END);
 	if (!ft_strcmp(action, "died"))
 		return ;
 	sem_post(philo->sems->s_write);

@@ -6,7 +6,7 @@
 #    By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/19 16:32:21 by halnuma           #+#    #+#              #
-#    Updated: 2025/03/05 12:41:26 by halnuma          ###   ########.fr        #
+#    Updated: 2025/03/25 12:25:41 by halnuma          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -40,7 +40,9 @@ P_OBJ			= obj/
 # ----- FILES ----- #
 
 MAIN 			= main			philo_utils		\
-				threads			actions
+				threads			actions			\
+				libft			init			\
+				time
 
 HDR_SRC			= philo
 

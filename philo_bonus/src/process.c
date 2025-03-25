@@ -6,75 +6,23 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 09:30:32 by halnuma           #+#    #+#             */
-/*   Updated: 2025/03/14 17:36:07 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/03/25 11:19:15 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
 
-void	kill_all_philos(t_philo *philo)
-{
-	int	i;
-
-	i = -1;
-	while (++i < philo->ruleset->philo_nb)
-		kill(philo->pid[i], SIGINT);
-}
-
-void	check_if_alive(t_philo *philo)
-{
-	update_time(philo);
-	if ((philo->t_current - philo->t_last_meal) >= philo->ruleset->t_die)
-	{
-		*philo->alive = 0;
-		// printf("yo %ld\n", (philo->t_current - philo->t_last_meal));
-		print_state(philo, "died", C_RED);
-		kill_all_philos(philo);
-		exit(EXIT_SUCCESS);
-	}
-}
-
-void	check_if_all_meals_eaten(t_philo *philo)
-{
-	int	i;
-
-	i = 0;
-	while (i < philo[0].ruleset->philo_nb)
-	{
-		if (philo[i].meals_nb < philo[0].ruleset->meals_nb)
-			return ;
-		i++;
-	}
-	*philo->meals_eaten = 1;
-	return ;
-}
-
-int	check_status(t_philo *philo)
-{
-	//check_if_alive(philo);
-	// check_if_all_meals_eaten(philo);
-	if (!(*philo->alive) || *philo->meals_eaten)
-	{
-		return (0);
-	}
-	return (1);
-}
-
-void	*death_checker(void *data)
-{
-	t_philo	*philo;
-
-	philo = (t_philo *)data;
-	while (1)
-		check_if_alive(philo);
-	return (NULL);
-}
-
 void	process_philo(t_philo *philo)
 {
 	pthread_t	monitor_tid;
 
-	pthread_create(&monitor_tid, NULL, death_checker, philo);
+	// philo->t_start = get_current_time();
+	// philo->t_last_meal = philo->t_start;
+	if (pthread_create(&monitor_tid, NULL, death_checker, philo))
+	{
+		ft_putstr_fd("Error: thread creation failed.\n", 2);
+		exit(EXIT_FAILURE);
+	}
 	pthread_detach(monitor_tid);
 	while (check_status(philo))
 	{
@@ -83,32 +31,6 @@ void	process_philo(t_philo *philo)
 		p_think(philo);
 	}
 	exit(EXIT_SUCCESS);
-}
-
-void	*monitor_routine(void *data)
-{
-	t_monitor	*monitor;
-	int			i;
-
-	monitor = (t_monitor *)data;
-	i = 0;
-	while (1)
-	{
-		if (i == monitor->philo[0].ruleset->philo_nb)
-			i = 0;
-		check_if_alive(&monitor->philo[i]);
-		if (monitor->philo[0].ruleset->meals_nb)
-			check_if_all_meals_eaten(monitor->philo);
-		if (!monitor->alive || monitor->meals_eaten)
-		{
-			// printf("yo\n");
-			//kill(0, SIGINT);
-			kill_all_philos(monitor->philo);
-			break ;
-		}
-		i++;
-	}
-	return (NULL);
 }
 
 void	*meals_monitor(void *data)
@@ -174,7 +96,11 @@ void	create_processes(t_rules *ruleset)
 			process_philo(&philo[i]);
 		}
 	}
-	pthread_create(&monitor_tid, NULL, meals_monitor, &philo[0]);
+	if (pthread_create(&monitor_tid, NULL, meals_monitor, &philo[0]))
+	{
+		ft_putstr_fd("Error: thread creation failed.\n", 2);
+		exit(EXIT_FAILURE);
+	}
 	pthread_detach(monitor_tid);
 	//(void)monitor_tid;
 	i = -1;

@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 16:30:26 by halnuma           #+#    #+#             */
-/*   Updated: 2025/03/14 17:35:23 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/03/25 11:31:51 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,15 @@
 # define C_CYN  "\x1B[36m"
 # define C_WHT  "\x1B[37m"
 
-# define PHILO_MAX  500
-
 # include <stdio.h>
 # include <stdlib.h>
 # include <pthread.h>
 # include <sys/time.h>
 # include <unistd.h>
+
+# define PHILO_MAX  500
+
+typedef pthread_mutex_t	t_mutex;
 
 typedef struct s_rules
 {
@@ -71,16 +73,34 @@ typedef struct s_monitor
 	int				meals_eaten;
 }	t_monitor;
 
+// Libft
+int		ft_atoi(const char *nptr);
+int		ft_isdigit(int c);
+int		ft_strcmp(const char *s1, const char *s2);
+void	ft_putstr_fd(char *s, int fd);
+
+//Init
+int		init_mtx(t_monitor *monitor, pthread_mutex_t *forks, t_rules *ruleset);
+int		p_init(t_philo *philo, int id, t_rules *ruleset);
+void	p_init_bis(t_philo *philo, pthread_mutex_t *fork, t_monitor *monitor);
 void	init_ruleset(t_rules *ruleset, char **av);
-void	create_threads(t_rules *ruleset);
+
+//Utils
+void	destroy_mtx(t_rules *ruleset, t_mutex *forks, t_philo *p, t_monitor *m);
+void	print_state(t_philo *philo, char *action, char *color);
+int		check_status(t_philo *philo);
+void	check_if_alive(t_philo *philo);
+void	check_if_all_meals_eaten(t_philo *philo);
+
+//Time
 void	update_time(t_philo *philo);
+
+//Actions
 void	p_eat(t_philo *philo);
 void	p_sleep(t_philo *philo);
 void	p_think(t_philo *philo);
-void	p_init(t_philo *philo, int id, t_rules *ruleset, pthread_mutex_t *fork, t_monitor *monitor);
-int		check_status(t_philo *philo);
-int		ft_atoi(const char *nptr);
-void	print_state(t_philo *philo, char *action, char *color);
-size_t	get_current_time(void);
+
+//Threads
+void	create_threads(t_rules *ruleset);
 
 #endif
