@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 10:45:39 by halnuma           #+#    #+#             */
-/*   Updated: 2025/03/25 11:32:12 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/03/26 11:35:19 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,8 @@ void	update_time(t_philo *philo)
 		pthread_mutex_unlock(philo->alive_mutex);
 		return ;
 	}
-	pthread_mutex_lock(&philo->time_mutex);
+	pthread_mutex_lock(&(philo->time_mutex));
 	philo->t_current = (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
 	philo->ts = philo->t_current - philo->t_start;
-	pthread_mutex_unlock(&philo->time_mutex);
+	pthread_mutex_unlock(&(philo->time_mutex));
 }

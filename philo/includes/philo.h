@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 16:30:26 by halnuma           #+#    #+#             */
-/*   Updated: 2025/03/25 11:31:51 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/03/26 11:01:47 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ typedef struct s_philo
 typedef struct s_monitor
 {
 	t_philo			*philo;
+	t_rules			*ruleset;
 	pthread_mutex_t	print_mutex;
 	pthread_mutex_t	alive_mutex;
 	int				alive;
@@ -80,9 +81,9 @@ int		ft_strcmp(const char *s1, const char *s2);
 void	ft_putstr_fd(char *s, int fd);
 
 //Init
-int		init_mtx(t_monitor *monitor, pthread_mutex_t *forks, t_rules *ruleset);
+int		init_mtx(t_monitor *monitor, t_mutex *forks, t_rules *ruleset);
 int		p_init(t_philo *philo, int id, t_rules *ruleset);
-void	p_init_bis(t_philo *philo, pthread_mutex_t *fork, t_monitor *monitor);
+void	p_init_bis(t_philo *philo, t_mutex *fork, t_monitor *monitor);
 void	init_ruleset(t_rules *ruleset, char **av);
 
 //Utils

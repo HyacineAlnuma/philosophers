@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 16:57:16 by halnuma           #+#    #+#             */
-/*   Updated: 2025/03/25 13:02:03 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/03/26 11:32:24 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,11 @@ void	print_state(t_philo *philo, char *action, char *color)
 	update_time(philo);
 	if (!check_status(philo) && ft_strcmp(action, "died"))
 		return ;
-	pthread_mutex_lock(&philo->time_mutex);
+	pthread_mutex_lock(&(philo->time_mutex));
 	pthread_mutex_lock(philo->print_mutex);
 	printf("[%ldms] - %s%d %s%s\n", philo->ts, color, philo->id, action, C_END);
-	pthread_mutex_unlock(&philo->time_mutex);
 	pthread_mutex_unlock(philo->print_mutex);
+	pthread_mutex_unlock(&(philo->time_mutex));
 }
 
 void	destroy_mtx(t_rules *ruleset, t_mutex *forks, t_philo *p, t_monitor *m)
@@ -50,25 +50,25 @@ int	check_status(t_philo *philo)
 		pthread_mutex_unlock(philo->alive_mutex);
 		return (0);
 	}
-	pthread_mutex_unlock(philo->alive_mutex);
 	pthread_mutex_unlock(philo->meals_mutex);
+	pthread_mutex_unlock(philo->alive_mutex);
 	return (1);
 }
 
 void	check_if_alive(t_philo *philo)
 {
 	update_time(philo);
-	pthread_mutex_lock(&philo->time_mutex);
+	pthread_mutex_lock(&(philo->time_mutex));
 	if ((philo->t_current - philo->t_last_meal) >= philo->ruleset->t_die)
 	{
-		pthread_mutex_unlock(&philo->time_mutex);
+		pthread_mutex_unlock(&(philo->time_mutex));
 		pthread_mutex_lock(philo->alive_mutex);
 		*philo->alive = 0;
 		pthread_mutex_unlock(philo->alive_mutex);
 		print_state(philo, "died", C_RED);
 		return ;
 	}
-	pthread_mutex_unlock(&philo->time_mutex);
+	pthread_mutex_unlock(&(philo->time_mutex));
 }
 
 void	check_if_all_meals_eaten(t_philo *philo)
