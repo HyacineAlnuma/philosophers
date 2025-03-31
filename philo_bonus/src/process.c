@@ -6,44 +6,52 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 09:30:32 by halnuma           #+#    #+#             */
-/*   Updated: 2025/03/31 10:29:36 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/03/31 15:44:19 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
 
-void	process_philo(t_philo *philo)
+void	process_philo(t_monitor *monitor, int i)
 {
 	pthread_t	monitor_tid;
+	t_philo		*philo;
+	t_death		death;
 
-	if (pthread_create(&monitor_tid, NULL, death_checker, philo))
+	philo = &monitor->philo[i];
+	death.monitor = monitor;
+	death.index = i;
+	if (pthread_create(&monitor_tid, NULL, death_checker, &death))
 	{
 		ft_putstr_fd("Error: thread creation failed.\n", 2);
+		kill_all_philos(monitor, 0);
 		exit(EXIT_FAILURE);
 	}
 	pthread_detach(monitor_tid);
-	while (check_status(philo))
+	while (1)
 	{
 		p_eat(philo);
 		p_sleep(philo);
 		p_think(philo);
 	}
-	exit(EXIT_SUCCESS);
 }
 
 void	*meals_monitor(void *data)
 {
-	t_philo	*philo;
-	int		finished_eating;
+	t_monitor	*monitor;
+	int			finished_eating;
 
-	philo = (t_philo *)data;
+	monitor = (t_monitor *)data;
 	finished_eating = 0;
 	while (1)
 	{
-		sem_wait(philo->sems->s_meals);
+		sem_wait(monitor->sems->s_meals);
 		finished_eating++;
-		if (finished_eating == philo->ruleset->philo_nb)
-			kill_all_philos(philo);
+		if (finished_eating == monitor->ruleset->philo_nb)
+		{
+			kill_all_philos(monitor, 2);
+			return (NULL);
+		}
 	}
 	return (NULL);
 }
@@ -62,11 +70,10 @@ void	launch_philos(t_philo *philo, t_rules *r, t_monitor *m, t_sem *sems)
 		if (philo[i].pid[i] == -1)
 			return ;
 		else if (philo[i].pid[i] == 0)
-		{
-			process_philo(&philo[i]);
-		}
+			process_philo(m, i);
 	}
 }
+
 
 void	create_processes(t_rules *ruleset)
 {
@@ -79,16 +86,22 @@ void	create_processes(t_rules *ruleset)
 	monitor.alive = 1;
 	monitor.meals_eaten = 0;
 	monitor.philo = philo;
+	monitor.sems = &sems;
+	monitor.ruleset = ruleset;
+	i = 0;
+	while (i < PHILO_MAX)
+	{
+		monitor.pids[i] = -1;
+		i++;
+	}
 	init_sems(&sems, ruleset);
-	launch_philos(philo, ruleset, &monitor, &sems);
-	if (pthread_create(&monitor_tid, NULL, meals_monitor, &philo[0]))
+	if (pthread_create(&monitor_tid, NULL, meals_monitor, &monitor))
 	{
 		ft_putstr_fd("Error: thread creation failed.\n", 2);
 		exit(EXIT_FAILURE);
 	}
 	pthread_detach(monitor_tid);
-	i = -1;
-	while (++i < ruleset->philo_nb)
-		waitpid(philo[i].pid[i], NULL, 0);
+	launch_philos(philo, ruleset, &monitor, &sems);
+	waitpid(-1, NULL, 0);
 	close_sems(&sems);
 }

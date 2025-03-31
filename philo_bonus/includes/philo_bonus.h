@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 16:30:26 by halnuma           #+#    #+#             */
-/*   Updated: 2025/03/31 10:56:19 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/03/31 15:32:26 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,15 @@ typedef struct s_monitor
 	t_philo	*philo;
 	int		alive;
 	int		meals_eaten;
+	t_sem	*sems;
+	t_rules	*ruleset;
 }	t_monitor;
+
+typedef struct s_death
+{
+	t_monitor	*monitor;
+	int			index;
+}	t_death;
 
 // Libft
 int		ft_atoi(const char *nptr);
@@ -108,6 +116,6 @@ void	create_processes(t_rules *ruleset);
 
 //Exit
 void	close_sems(t_sem *sems);
-void	kill_all_philos(t_philo *philo);
+void	kill_all_philos(t_monitor *monitor, int bool);
 
 #endif

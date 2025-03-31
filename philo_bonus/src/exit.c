@@ -6,19 +6,26 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 10:27:53 by halnuma           #+#    #+#             */
-/*   Updated: 2025/03/31 10:46:27 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/03/31 15:43:48 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
 
-void	kill_all_philos(t_philo *philo)
+void	kill_all_philos(t_monitor *monitor, int bool)
 {
 	int	i;
 
 	i = -1;
-	while (++i < philo->ruleset->philo_nb)
-		kill(philo->pid[i], SIGINT);
+	close_sems(monitor->sems);
+	if (bool)
+	{
+		while (++i < monitor->ruleset->philo_nb)
+		{
+			if (monitor->pids[i] != -1)
+				kill(monitor->pids[i], SIGKILL);
+		}
+	}
 }
 
 void	close_sems(t_sem *sems)

@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 16:28:45 by halnuma           #+#    #+#             */
-/*   Updated: 2025/03/25 11:14:09 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/03/31 14:57:40 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,6 @@ int	main(int ac, char **av)
 	}
 	else
 		ft_putstr_fd("Error: Bad number of arguments.\n", 2);
-	return (0);
 	free(ruleset);
+	return (0);
 }

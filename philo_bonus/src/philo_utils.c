@@ -6,23 +6,34 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 16:57:16 by halnuma           #+#    #+#             */
-/*   Updated: 2025/03/31 10:28:09 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/03/31 15:37:43 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
 
-void	check_if_alive(t_philo *philo)
-{
-	update_time(philo);
-	if ((philo->t_current - philo->t_last_meal) >= philo->ruleset->t_die)
-	{
-		*philo->alive = 0;
-		print_state(philo, "died", C_RED);
-		kill_all_philos(philo);
-		exit(EXIT_SUCCESS);
-	}
-}
+// void	check_if_alive(t_philo *philo)
+// {
+// 	int	i;
+
+// 	i = 0;
+// 	update_time(philo);
+// 	// sem_wait(philo->sems->s_death);
+// 	// printf();
+// 	if ((philo->t_current - philo->t_last_meal) >= philo->ruleset->t_die)
+// 	{
+// 		*philo->alive = 0;
+// 		print_state(philo, "died", C_RED);
+// 		while (i < philo->ruleset->philo_nb)
+// 		{
+// 			sem_post(philo->sems->s_meals);
+// 			i++;
+// 		}
+// 		// exit(EXIT_SUCCESS);
+// 		return (NULL);
+// 	}
+// 	// sem_post(philo->sems->s_death);
+// }
 
 void	check_if_all_meals_eaten(t_philo *philo)
 {
@@ -51,10 +62,33 @@ int	check_status(t_philo *philo)
 void	*death_checker(void *data)
 {
 	t_philo	*philo;
+	t_death	*death;
+	int		i;
 
-	philo = (t_philo *)data;
+	death = (t_death *)data;
+	philo = &death->monitor->philo[death->index];
+	// free(philo->ruleset);
 	while (1)
-		check_if_alive(philo);
+	{
+		update_time(philo);
+		// sem_wait(philo->sems->s_death);
+		// printf();
+		i = 0;
+		if ((philo->t_current - philo->t_last_meal) >= philo->ruleset->t_die)
+		{
+			*philo->alive = 0;
+			print_state(philo, "died", C_RED);
+			while (i < philo->ruleset->philo_nb)
+			{
+				sem_post(philo->sems->s_meals);
+				i++;
+			}
+			// kill_all_philos(death->monitor, 3);
+			exit(EXIT_SUCCESS);
+			// break ;
+		}
+		// sem_post(philo->sems->s_death);
+	}
 	return (NULL);
 }
 
