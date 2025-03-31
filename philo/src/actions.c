@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 11:54:02 by halnuma           #+#    #+#             */
-/*   Updated: 2025/03/26 11:36:46 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/03/31 09:30:13 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,9 @@ void	p_eat(t_philo *philo)
 	philo->meals_nb++;
 	pthread_mutex_unlock(philo->meals_mutex);
 	pthread_mutex_lock(&(philo->time_mutex));
-	philo->t_last_meal = philo->t_current;
-	usleep(philo->ut_eat);
+	philo->t_last_meal = get_current_time();
 	pthread_mutex_unlock(&(philo->time_mutex));
+	ft_usleep(philo->ruleset->t_eat, philo);
 	pthread_mutex_unlock(philo->r_fork);
 	pthread_mutex_unlock(philo->l_fork);
 }
@@ -39,7 +39,7 @@ void	p_eat(t_philo *philo)
 void	p_sleep(t_philo *philo)
 {
 	print_state(philo, "is sleeping", C_CYN);
-	usleep(philo->ut_sleep);
+	ft_usleep(philo->ruleset->t_sleep, philo);
 }
 
 void	p_think(t_philo *philo)

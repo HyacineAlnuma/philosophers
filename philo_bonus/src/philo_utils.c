@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 16:57:16 by halnuma           #+#    #+#             */
-/*   Updated: 2025/03/25 11:10:17 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/03/31 10:01:18 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,14 @@ void	kill_all_philos(t_philo *philo)
 
 void	check_if_alive(t_philo *philo)
 {
-	update_time(philo);
-	if ((philo->t_current - philo->t_last_meal) >= philo->ruleset->t_die)
+	size_t	current;
+
+	current = get_current_time();
+	// printf("ID:%d CUR:%lu LM:%lu\n", philo->id, current, philo->t_last_meal);
+	// update_time(philo);
+	if ((current - philo->t_last_meal) >= philo->ruleset->t_die)
 	{
+		// printf("id:%d cur:%lu die:%zu\n", philo->id, (current - philo->t_last_meal), philo->ruleset->t_die);
 		*philo->alive = 0;
 		// printf("yo %ld\n", (philo->t_current - philo->t_last_meal));
 		print_state(philo, "died", C_RED);
@@ -72,9 +77,13 @@ void	*death_checker(void *data)
 
 void	print_state(t_philo *philo, char *action, char *color)
 {
-	update_time(philo);
+	size_t	current;
+	size_t	ts;
+
+	current = get_current_time();
+	ts = current - philo->t_start;
 	sem_wait(philo->sems->s_write);
-	printf("[%ldms] - %s%d %s%s\n", philo->ts, color, philo->id, action, C_END);
+	printf("[%ldms] - %s%d %s%s\n", ts, color, philo->id, action, C_END);
 	if (!ft_strcmp(action, "died"))
 		return ;
 	sem_post(philo->sems->s_write);

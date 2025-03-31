@@ -6,26 +6,28 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 10:45:39 by halnuma           #+#    #+#             */
-/*   Updated: 2025/03/26 11:35:19 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/03/31 09:43:02 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	update_time(t_philo *philo)
+size_t	get_current_time(void)
 {
-	struct timeval	tv;
+	struct timeval	time;
 
-	if (gettimeofday(&tv, NULL))
+	gettimeofday(&time, NULL);
+	return (time.tv_sec * 1000 + time.tv_usec / 1000);
+}
+
+void	ft_usleep(size_t sleep, t_philo *philo)
+{
+	size_t	timer;
+
+	timer = 0;
+	while (check_status(philo) && timer < sleep * 1000)
 	{
-		ft_putstr_fd("Error: gettimeofday failed.\n", 2);
-		pthread_mutex_lock(philo->alive_mutex);
-		*philo->alive = 0;
-		pthread_mutex_unlock(philo->alive_mutex);
-		return ;
+		usleep(100);
+		timer += 100;
 	}
-	pthread_mutex_lock(&(philo->time_mutex));
-	philo->t_current = (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
-	philo->ts = philo->t_current - philo->t_start;
-	pthread_mutex_unlock(&(philo->time_mutex));
 }

@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 16:30:26 by halnuma           #+#    #+#             */
-/*   Updated: 2025/03/26 11:01:47 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/03/31 09:43:08 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,9 @@ typedef pthread_mutex_t	t_mutex;
 typedef struct s_rules
 {
 	int				philo_nb;
-	time_t			t_die;
-	time_t			t_eat;
-	time_t			t_sleep;
+	size_t			t_die;
+	size_t			t_eat;
+	size_t			t_sleep;
 	int				meals_nb;
 }	t_rules;
 
@@ -48,12 +48,8 @@ typedef struct s_philo
 	int				meals_nb;
 	int				*alive;
 	int				*meals_eaten;
-	time_t			t_start;
-	time_t			t_current;
-	time_t			t_last_meal;
-	time_t			ts;
-	time_t			ut_sleep;
-	time_t			ut_eat;
+	size_t			t_start;
+	size_t			t_last_meal;
 	t_rules			*ruleset;
 	pthread_mutex_t	*l_fork;
 	pthread_mutex_t	*r_fork;
@@ -94,7 +90,8 @@ void	check_if_alive(t_philo *philo);
 void	check_if_all_meals_eaten(t_philo *philo);
 
 //Time
-void	update_time(t_philo *philo);
+size_t	get_current_time(void);
+void	ft_usleep(size_t sleep, t_philo *philo);
 
 //Actions
 void	p_eat(t_philo *philo);

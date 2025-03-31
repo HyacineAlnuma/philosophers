@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 09:30:32 by halnuma           #+#    #+#             */
-/*   Updated: 2025/03/25 11:19:15 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/03/31 10:00:50 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,14 @@ void	process_philo(t_philo *philo)
 		ft_putstr_fd("Error: thread creation failed.\n", 2);
 		exit(EXIT_FAILURE);
 	}
-	pthread_detach(monitor_tid);
+	// pthread_detach(monitor_tid);
 	while (check_status(philo))
 	{
 		p_eat(philo);
 		p_sleep(philo);
 		p_think(philo);
 	}
+	pthread_detach(monitor_tid);
 	exit(EXIT_SUCCESS);
 }
 

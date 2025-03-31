@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 11:40:08 by halnuma           #+#    #+#             */
-/*   Updated: 2025/03/26 11:36:01 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/03/26 11:58:03 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@ void	*philo_routine(void *data)
 	t_philo			*philo;
 
 	philo = (t_philo *)data;
-	update_time(philo);
 	if (philo->id % 2 == 0)
 		usleep(1000);
 	while (check_status(philo))
