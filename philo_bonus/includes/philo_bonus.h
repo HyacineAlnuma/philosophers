@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 16:30:26 by halnuma           #+#    #+#             */
-/*   Updated: 2025/03/25 11:18:02 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/03/31 10:29:02 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,11 +85,11 @@ void	ft_putstr_fd(char *s, int fd);
 //Init
 void	p_init(t_philo *philo, int id, t_rules *ruleset, t_monitor *monitor);
 void	init_ruleset(t_rules *ruleset, char **av);
+void	init_sems(t_sem *sems, t_rules *ruleset);
 
 //Utils
 void	print_state(t_philo *philo, char *action, char *color);
 int		check_status(t_philo *philo);
-void	kill_all_philos(t_philo *philo);
 void	check_if_alive(t_philo *philo);
 void	check_if_all_meals_eaten(t_philo *philo);
 int		check_status(t_philo *philo);
@@ -107,5 +107,8 @@ void	p_think(t_philo *philo);
 //Process
 void	create_processes(t_rules *ruleset);
 
+//Exit
+void	close_sems(t_sem *sems);
+void	kill_all_philos(t_philo *philo);
 
 #endif

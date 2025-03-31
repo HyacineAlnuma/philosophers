@@ -6,7 +6,7 @@
 #    By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/19 16:32:21 by halnuma           #+#    #+#              #
-#    Updated: 2025/03/25 11:08:56 by halnuma          ###   ########.fr        #
+#    Updated: 2025/03/31 10:46:02 by halnuma          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -42,7 +42,7 @@ P_OBJ			= obj/
 MAIN 			= main			philo_utils		\
 				process			actions			\
 				libft			init			\
-				time
+				time			exit
 
 HDR_SRC			= philo_bonus
 

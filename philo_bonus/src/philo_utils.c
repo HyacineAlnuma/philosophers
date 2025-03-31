@@ -6,20 +6,11 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 16:57:16 by halnuma           #+#    #+#             */
-/*   Updated: 2025/03/25 11:10:17 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/03/31 10:28:09 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
-
-void	kill_all_philos(t_philo *philo)
-{
-	int	i;
-
-	i = -1;
-	while (++i < philo->ruleset->philo_nb)
-		kill(philo->pid[i], SIGINT);
-}
 
 void	check_if_alive(t_philo *philo)
 {
@@ -27,7 +18,6 @@ void	check_if_alive(t_philo *philo)
 	if ((philo->t_current - philo->t_last_meal) >= philo->ruleset->t_die)
 	{
 		*philo->alive = 0;
-		// printf("yo %ld\n", (philo->t_current - philo->t_last_meal));
 		print_state(philo, "died", C_RED);
 		kill_all_philos(philo);
 		exit(EXIT_SUCCESS);
@@ -51,8 +41,6 @@ void	check_if_all_meals_eaten(t_philo *philo)
 
 int	check_status(t_philo *philo)
 {
-	//check_if_alive(philo);
-	// check_if_all_meals_eaten(philo);
 	if (!(*philo->alive) || *philo->meals_eaten)
 	{
 		return (0);
