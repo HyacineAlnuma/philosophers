@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 16:57:16 by halnuma           #+#    #+#             */
-/*   Updated: 2025/03/31 09:42:45 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/03/31 10:56:11 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	print_state(t_philo *philo, char *action, char *color)
 	size_t	current;
 	size_t	ts;
 
-	current = get_current_time();
+	current = get_current_time(philo);
 	ts = current - philo->t_start;
 	if (!check_status(philo) && ft_strcmp(action, "died"))
 		return ;
@@ -61,7 +61,7 @@ void	check_if_alive(t_philo *philo)
 {
 	size_t	current;
 
-	current = get_current_time();
+	current = get_current_time(philo);
 	pthread_mutex_lock(&(philo->time_mutex));
 	if ((current - philo->t_last_meal) >= philo->ruleset->t_die)
 	{

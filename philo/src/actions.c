@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 11:54:02 by halnuma           #+#    #+#             */
-/*   Updated: 2025/03/31 09:30:13 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/03/31 11:07:52 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,11 @@ void	p_eat(t_philo *philo)
 	if (philo->ruleset->philo_nb == 1)
 	{
 		pthread_mutex_unlock(philo->l_fork);
+		pthread_mutex_lock(philo->alive_mutex);
+		*philo->alive = 0;
+		pthread_mutex_unlock(philo->alive_mutex);
 		usleep(philo->ruleset->t_die * 1000);
+		print_state(philo, "died", C_RED);
 		return ;
 	}
 	pthread_mutex_lock(philo->r_fork);
@@ -29,7 +33,7 @@ void	p_eat(t_philo *philo)
 	philo->meals_nb++;
 	pthread_mutex_unlock(philo->meals_mutex);
 	pthread_mutex_lock(&(philo->time_mutex));
-	philo->t_last_meal = get_current_time();
+	philo->t_last_meal = get_current_time(philo);
 	pthread_mutex_unlock(&(philo->time_mutex));
 	ft_usleep(philo->ruleset->t_eat, philo);
 	pthread_mutex_unlock(philo->r_fork);

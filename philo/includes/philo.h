@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 16:30:26 by halnuma           #+#    #+#             */
-/*   Updated: 2025/03/31 09:43:08 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/03/31 10:55:49 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ void	check_if_alive(t_philo *philo);
 void	check_if_all_meals_eaten(t_philo *philo);
 
 //Time
-size_t	get_current_time(void);
+size_t	get_current_time(t_philo *philo);
 void	ft_usleep(size_t sleep, t_philo *philo);
 
 //Actions

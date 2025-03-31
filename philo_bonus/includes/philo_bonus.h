@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 16:30:26 by halnuma           #+#    #+#             */
-/*   Updated: 2025/03/31 09:47:22 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/03/31 10:56:19 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,11 +37,11 @@
 
 typedef struct s_rules
 {
-	int		philo_nb;
-	size_t	t_die;
-	size_t	t_eat;
-	size_t	t_sleep;
-	int		meals_nb;
+	int	philo_nb;
+	int	t_die;
+	int	t_eat;
+	int	t_sleep;
+	int	meals_nb;
 }	t_rules;
 
 typedef struct s_sem
@@ -58,12 +58,12 @@ typedef struct s_philo
 	int		meals_nb;
 	int		*alive;
 	int		*meals_eaten;
-	size_t	t_start;
-	size_t	t_current;
-	size_t	t_last_meal;
-	size_t	ts;
-	size_t	ut_sleep;
-	size_t	ut_eat;
+	time_t	t_start;
+	time_t	t_current;
+	time_t	t_last_meal;
+	time_t	ts;
+	time_t	ut_sleep;
+	time_t	ut_eat;
 	t_rules	*ruleset;
 	t_sem	*sems;
 }	t_philo;
@@ -85,20 +85,18 @@ void	ft_putstr_fd(char *s, int fd);
 //Init
 void	p_init(t_philo *philo, int id, t_rules *ruleset, t_monitor *monitor);
 void	init_ruleset(t_rules *ruleset, char **av);
+void	init_sems(t_sem *sems, t_rules *ruleset);
 
 //Utils
 void	print_state(t_philo *philo, char *action, char *color);
 int		check_status(t_philo *philo);
-void	kill_all_philos(t_philo *philo);
 void	check_if_alive(t_philo *philo);
 void	check_if_all_meals_eaten(t_philo *philo);
 int		check_status(t_philo *philo);
 void	*death_checker(void *data);
 
 //Time
-size_t	get_current_time(void);
-void	ft_usleep(size_t sleep, t_philo *philo);
-// void	update_time(t_philo *philo);
+void	update_time(t_philo *philo);
 
 //Actions
 void	p_eat(t_philo *philo);
@@ -108,5 +106,8 @@ void	p_think(t_philo *philo);
 //Process
 void	create_processes(t_rules *ruleset);
 
+//Exit
+void	close_sems(t_sem *sems);
+void	kill_all_philos(t_philo *philo);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 09:30:32 by halnuma           #+#    #+#             */
-/*   Updated: 2025/03/31 10:00:50 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/03/31 10:29:36 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,21 +16,18 @@ void	process_philo(t_philo *philo)
 {
 	pthread_t	monitor_tid;
 
-	// philo->t_start = get_current_time();
-	// philo->t_last_meal = philo->t_start;
 	if (pthread_create(&monitor_tid, NULL, death_checker, philo))
 	{
 		ft_putstr_fd("Error: thread creation failed.\n", 2);
 		exit(EXIT_FAILURE);
 	}
-	// pthread_detach(monitor_tid);
+	pthread_detach(monitor_tid);
 	while (check_status(philo))
 	{
 		p_eat(philo);
 		p_sleep(philo);
 		p_think(philo);
 	}
-	pthread_detach(monitor_tid);
 	exit(EXIT_SUCCESS);
 }
 
@@ -51,6 +48,26 @@ void	*meals_monitor(void *data)
 	return (NULL);
 }
 
+void	launch_philos(t_philo *philo, t_rules *r, t_monitor *m, t_sem *sems)
+{
+	int	i;
+
+	i = -1;
+	while (++i < r->philo_nb)
+	{
+		philo[i].pid = m->pids;
+		philo[i].sems = sems;
+		p_init(&philo[i], (i + 1), r, m);
+		philo[i].pid[i] = fork();
+		if (philo[i].pid[i] == -1)
+			return ;
+		else if (philo[i].pid[i] == 0)
+		{
+			process_philo(&philo[i]);
+		}
+	}
+}
+
 void	create_processes(t_rules *ruleset)
 {
 	t_monitor	monitor;
@@ -62,55 +79,16 @@ void	create_processes(t_rules *ruleset)
 	monitor.alive = 1;
 	monitor.meals_eaten = 0;
 	monitor.philo = philo;
-	sem_unlink("/forks");
-	sem_unlink("/death");
-	sem_unlink("/meals");
-	sems.s_forks = sem_open("/forks", O_CREAT | O_EXCL, 0666, ruleset->philo_nb);
-	if (sems.s_forks == SEM_FAILED)
-	{
-		perror("sem_open");
-		exit(1);
-	}
-	sems.s_write = sem_open("/death", O_CREAT | O_EXCL, 0666, 1);
-	if (sems.s_write == SEM_FAILED)
-	{
-		perror("sem_open");
-		exit(1);
-	}
-	sems.s_meals = sem_open("/meals", O_CREAT | O_EXCL, 0666, 0);
-	if (sems.s_meals == SEM_FAILED)
-	{
-		perror("sem_open");
-		exit(1);
-	}
-	i = -1;
-	while (++i < ruleset->philo_nb)
-	{
-		philo[i].pid = monitor.pids;
-		philo[i].sems = &sems;
-		p_init(&philo[i], (i + 1), ruleset, &monitor);
-		philo[i].pid[i] = fork();
-		if (philo[i].pid[i] == -1)
-			return ;
-		else if (philo[i].pid[i] == 0)
-		{
-			process_philo(&philo[i]);
-		}
-	}
+	init_sems(&sems, ruleset);
+	launch_philos(philo, ruleset, &monitor, &sems);
 	if (pthread_create(&monitor_tid, NULL, meals_monitor, &philo[0]))
 	{
 		ft_putstr_fd("Error: thread creation failed.\n", 2);
 		exit(EXIT_FAILURE);
 	}
 	pthread_detach(monitor_tid);
-	//(void)monitor_tid;
 	i = -1;
 	while (++i < ruleset->philo_nb)
 		waitpid(philo[i].pid[i], NULL, 0);
-	sem_close(sems.s_forks);
-	sem_close(sems.s_write);
-	sem_close(sems.s_meals);
-	sem_unlink("/forks");
-	sem_unlink("/meals");
-	sem_unlink("/death");
+	close_sems(&sems);
 }

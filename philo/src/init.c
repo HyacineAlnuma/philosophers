@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 10:38:06 by halnuma           #+#    #+#             */
-/*   Updated: 2025/03/26 11:49:39 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/03/31 10:56:02 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ int	p_init(t_philo *philo, int id, t_rules *ruleset)
 {
 	philo->ruleset = ruleset;
 	philo->id = id;
-	philo->t_start = get_current_time();
+	philo->t_start = get_current_time(philo);
 	philo->t_last_meal = philo->t_start;
 	philo->meals_nb = 0;
 	if (pthread_mutex_init(&philo->time_mutex, NULL))
