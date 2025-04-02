@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 16:30:26 by halnuma           #+#    #+#             */
-/*   Updated: 2025/03/31 15:32:26 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/04/02 12:49:48 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 # define C_CYN  "\x1B[36m"
 # define C_WHT  "\x1B[37m"
 
-# define PHILO_MAX  500
+# define PHILO_MAX  200
 
 # include <stdio.h>
 # include <stdlib.h>
@@ -34,14 +34,15 @@
 # include <signal.h>
 # include <pthread.h>
 # include <fcntl.h>
+# include <limits.h>
 
 typedef struct s_rules
 {
-	int	philo_nb;
-	int	t_die;
-	int	t_eat;
-	int	t_sleep;
-	int	meals_nb;
+	int		philo_nb;
+	size_t	t_die;
+	size_t	t_eat;
+	size_t	t_sleep;
+	int		meals_nb;
 }	t_rules;
 
 typedef struct s_sem
@@ -49,6 +50,7 @@ typedef struct s_sem
 	sem_t	*s_forks;
 	sem_t	*s_write;
 	sem_t	*s_meals;
+	sem_t	*s_death;
 }	t_sem;
 
 typedef struct s_philo
@@ -56,26 +58,23 @@ typedef struct s_philo
 	pid_t	*pid;
 	int		id;
 	int		meals_nb;
-	int		*alive;
-	int		*meals_eaten;
-	time_t	t_start;
-	time_t	t_current;
-	time_t	t_last_meal;
-	time_t	ts;
-	time_t	ut_sleep;
-	time_t	ut_eat;
+	size_t	t_start;
+	size_t	t_current;
+	size_t	t_last_meal;
+	size_t	ts;
+	size_t	ut_sleep;
+	size_t	ut_eat;
 	t_rules	*ruleset;
 	t_sem	*sems;
 }	t_philo;
 
 typedef struct s_monitor
 {
-	pid_t	pids[PHILO_MAX];
-	t_philo	*philo;
-	int		alive;
-	int		meals_eaten;
-	t_sem	*sems;
-	t_rules	*ruleset;
+	pthread_mutex_t	m_pid;
+	pid_t			pids[PHILO_MAX];
+	t_philo			*philo;
+	t_sem			*sems;
+	t_rules			*ruleset;
 }	t_monitor;
 
 typedef struct s_death
@@ -91,19 +90,17 @@ int		ft_strcmp(const char *s1, const char *s2);
 void	ft_putstr_fd(char *s, int fd);
 
 //Init
-void	p_init(t_philo *philo, int id, t_rules *ruleset, t_monitor *monitor);
+void	p_init(t_philo *philo, int id, t_rules *ruleset);
 void	init_ruleset(t_rules *ruleset, char **av);
-void	init_sems(t_sem *sems, t_rules *ruleset);
+int		init_monitor(t_monitor *m, t_philo *philo, t_rules *r, t_sem *sems);
+int		init_sems(t_sem *sems, t_rules *ruleset);
 
 //Utils
 void	print_state(t_philo *philo, char *action, char *color);
-int		check_status(t_philo *philo);
-void	check_if_alive(t_philo *philo);
-void	check_if_all_meals_eaten(t_philo *philo);
-int		check_status(t_philo *philo);
 void	*death_checker(void *data);
 
 //Time
+size_t	get_current_time(void);
 void	update_time(t_philo *philo);
 
 //Actions

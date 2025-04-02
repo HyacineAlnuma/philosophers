@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 10:45:39 by halnuma           #+#    #+#             */
-/*   Updated: 2025/03/31 10:57:55 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/04/02 09:25:53 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,14 @@ size_t	get_current_time(t_philo *philo)
 
 void	ft_usleep(size_t sleep, t_philo *philo)
 {
-	size_t	timer;
+	// size_t	timer;
 
-	timer = 0;
-	while (check_status(philo) && timer < sleep * 1000)
-	{
-		usleep(100);
-		timer += 100;
-	}
+	// timer = 0;
+	// while (check_status(philo) && timer < sleep * 1000)
+	// {
+	// 	usleep(20000);
+	// 	timer += 20000;
+	// }
+	(void)philo;
+	usleep(sleep * 1000);
 }

@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 16:30:26 by halnuma           #+#    #+#             */
-/*   Updated: 2025/03/31 10:55:49 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/04/02 12:37:30 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,9 @@
 # include <pthread.h>
 # include <sys/time.h>
 # include <unistd.h>
+# include <limits.h>
 
-# define PHILO_MAX  500
+# define PHILO_MAX  200
 
 typedef pthread_mutex_t	t_mutex;
 

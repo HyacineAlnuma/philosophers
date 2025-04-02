@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 09:30:32 by halnuma           #+#    #+#             */
-/*   Updated: 2025/03/31 15:44:19 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/04/02 12:58:28 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@ void	process_philo(t_monitor *monitor, int i)
 		exit(EXIT_FAILURE);
 	}
 	pthread_detach(monitor_tid);
+	if (philo->id % 2 == 0)
+		usleep(1000);
 	while (1)
 	{
 		p_eat(philo);
@@ -49,7 +51,7 @@ void	*meals_monitor(void *data)
 		finished_eating++;
 		if (finished_eating == monitor->ruleset->philo_nb)
 		{
-			kill_all_philos(monitor, 2);
+			kill_all_philos(monitor, 1);
 			return (NULL);
 		}
 	}
@@ -65,8 +67,10 @@ void	launch_philos(t_philo *philo, t_rules *r, t_monitor *m, t_sem *sems)
 	{
 		philo[i].pid = m->pids;
 		philo[i].sems = sems;
-		p_init(&philo[i], (i + 1), r, m);
+		p_init(&philo[i], (i + 1), r);
+		pthread_mutex_lock(&m->m_pid);
 		philo[i].pid[i] = fork();
+		pthread_mutex_unlock(&m->m_pid);
 		if (philo[i].pid[i] == -1)
 			return ;
 		else if (philo[i].pid[i] == 0)
@@ -74,34 +78,23 @@ void	launch_philos(t_philo *philo, t_rules *r, t_monitor *m, t_sem *sems)
 	}
 }
 
-
 void	create_processes(t_rules *ruleset)
 {
 	t_monitor	monitor;
 	pthread_t	monitor_tid;
 	t_philo		philo[PHILO_MAX];
 	t_sem		sems;
-	int			i;
 
-	monitor.alive = 1;
-	monitor.meals_eaten = 0;
-	monitor.philo = philo;
-	monitor.sems = &sems;
-	monitor.ruleset = ruleset;
-	i = 0;
-	while (i < PHILO_MAX)
-	{
-		monitor.pids[i] = -1;
-		i++;
-	}
-	init_sems(&sems, ruleset);
+	if (!init_monitor(&monitor, philo, ruleset, &sems))
+		return ;
+	if (!init_sems(&sems, ruleset))
+		return ;
 	if (pthread_create(&monitor_tid, NULL, meals_monitor, &monitor))
 	{
 		ft_putstr_fd("Error: thread creation failed.\n", 2);
 		exit(EXIT_FAILURE);
 	}
-	pthread_detach(monitor_tid);
 	launch_philos(philo, ruleset, &monitor, &sems);
 	waitpid(-1, NULL, 0);
-	close_sems(&sems);
+	pthread_join(monitor_tid, NULL);
 }

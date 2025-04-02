@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 10:34:38 by halnuma           #+#    #+#             */
-/*   Updated: 2025/03/25 10:35:04 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/04/02 11:39:53 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,9 +55,9 @@ int	ft_isdigit(int c)
 
 int	ft_atoi(const char *nptr)
 {
-	time_t	i;
+	size_t	i;
 	int		sign;
-	int		result;
+	size_t	result;
 
 	sign = 1;
 	i = 0;
@@ -75,5 +75,7 @@ int	ft_atoi(const char *nptr)
 		result = result * 10 + (nptr[i] - '0');
 		i++;
 	}
+	if (result > INT_MAX)
+		return (-1);
 	return (result * sign);
 }

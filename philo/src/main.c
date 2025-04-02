@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 16:28:45 by halnuma           #+#    #+#             */
-/*   Updated: 2025/03/26 11:21:39 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/04/02 11:39:02 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,10 @@ int	check_args(int ac, char **av, t_rules *ruleset)
 			if (!ft_isdigit(av[i][j]))
 				return (0);
 		}
+		if (j > 10)
+			return (0);
+		if (ft_atoi(av[i]) == -1)
+			return (0);
 	}
 	if (ft_atoi(av[1]) > PHILO_MAX)
 		return (0);

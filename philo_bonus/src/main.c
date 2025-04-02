@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 16:28:45 by halnuma           #+#    #+#             */
-/*   Updated: 2025/03/31 14:57:40 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/04/02 11:38:16 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,10 @@ int	check_args(char **av)
 				return (0);
 			j++;
 		}
+		if (j > 10)
+			return (0);
+		if (ft_atoi(av[i]) == -1)
+			return (0);
 		i++;
 	}
 	if (ft_atoi(av[1]) > PHILO_MAX)
@@ -43,14 +47,14 @@ int	main(int ac, char **av)
 		return (1);
 	if (ac == 5 || ac == 6)
 	{
-		if (ac == 6 && ft_atoi(av[5]) == 0)
-		{
-			free(ruleset);
-			return (1);
-		}
 		if (!check_args(av))
 		{
 			ft_putstr_fd("Error: Bad arguments.\n", 2);
+			return (1);
+		}
+		if (ac == 6 && ft_atoi(av[5]) == 0)
+		{
+			free(ruleset);
 			return (1);
 		}
 		init_ruleset(ruleset, av);

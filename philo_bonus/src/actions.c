@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 11:54:02 by halnuma           #+#    #+#             */
-/*   Updated: 2025/03/31 13:35:12 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/04/02 11:13:56 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,10 @@ void	p_eat(t_philo *philo)
 	sem_wait(philo->sems->s_forks);
 	print_state(philo, "has taken a fork", C_YEL);
 	print_state(philo, "is eating", C_GRN);
-	// sem_wait(philo->sems->s_death);
-	philo->t_last_meal = philo->t_current;
+	sem_wait(philo->sems->s_death);
+	philo->t_last_meal = get_current_time();
 	philo->meals_nb++;
-	// sem_post(philo->sems->s_death);
+	sem_post(philo->sems->s_death);
 	if (philo->meals_nb == philo->ruleset->meals_nb)
 		sem_post(philo->sems->s_meals);
 	usleep(philo->ut_eat);
