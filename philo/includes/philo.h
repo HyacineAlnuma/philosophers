@@ -54,6 +54,8 @@ typedef struct s_philo
 	t_rules			*ruleset;
 	pthread_mutex_t	*l_fork;
 	pthread_mutex_t	*r_fork;
+	int				l_fork_index;
+    int				r_fork_index;
 	pthread_mutex_t	*alive_mutex;
 	pthread_mutex_t	time_mutex;
 	pthread_mutex_t	*print_mutex;
@@ -92,7 +94,7 @@ void	check_if_all_meals_eaten(t_philo *philo);
 
 //Time
 size_t	get_current_time(t_philo *philo);
-void	ft_usleep(size_t sleep, t_philo *philo);
+void	custom_usleep(size_t sleep, t_philo *philo);
 
 //Actions
 void	p_eat(t_philo *philo);

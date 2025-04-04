@@ -19,9 +19,12 @@ void	print_state(t_philo *philo, char *action, char *color)
 
 	current = get_current_time(philo);
 	ts = current - philo->t_start;
-	if (!check_status(philo) && ft_strcmp(action, "died"))
-		return ;
 	pthread_mutex_lock(philo->print_mutex);
+	if (!check_status(philo) && ft_strcmp(action, "died"))
+	{
+		pthread_mutex_unlock(philo->print_mutex);
+		return ;
+	}
 	printf("[%ldms] - %s%d %s%s\n", ts, color, philo->id, action, C_END);
 	pthread_mutex_unlock(philo->print_mutex);
 }

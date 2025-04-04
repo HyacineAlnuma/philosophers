@@ -27,16 +27,19 @@ size_t	get_current_time(t_philo *philo)
 	return (time.tv_sec * 1000 + time.tv_usec / 1000);
 }
 
-void	ft_usleep(size_t sleep, t_philo *philo)
+void	custom_usleep(size_t sleep, t_philo *philo)
 {
-	// size_t	timer;
+    size_t	start_time;
+    size_t	current_time;
 
-	// timer = 0;
-	// while (check_status(philo) && timer < sleep * 1000)
-	// {
-	// 	usleep(20000);
-	// 	timer += 20000;
-	// }
-	(void)philo;
-	usleep(sleep * 1000);
+    start_time = get_current_time(philo);
+    while (1)
+    {
+        current_time = get_current_time(philo);
+        if ((current_time - start_time) >= sleep)
+            break;
+        if (!check_status(philo))
+            break;
+        usleep(50);
+    }
 }

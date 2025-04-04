@@ -29,7 +29,7 @@ _BOLD			= \e[1m
 NAME			= philo
 CC 				= cc
 CFLAGS 			= -Wall -Wextra -Werror -pthread
-TFLAGS 			= -fsanitize=thread -g
+# TFLAGS 			= -fsanitize=thread -g
 
 # ----- PATHS ----- #
 
