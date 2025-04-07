@@ -6,7 +6,7 @@
 #    By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/19 16:32:21 by halnuma           #+#    #+#              #
-#    Updated: 2025/02/19 17:01:39 by halnuma          ###   ########.fr        #
+#    Updated: 2025/04/02 11:33:55 by halnuma          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,35 +34,49 @@ CFLAGS 			= -Wall -Wextra -Werror -pthread
 
 P_INC			= includes/
 P_SRC			= src/
+P_OBJ			= obj/
 
 # ----- FILES ----- #
 
-MAIN 			= main			philo_utils
+MAIN 			= main			philo_utils		\
+				process			actions			\
+				libft			init			\
+				time			exit
 
-HDR_SRC			= philo
+HDR_SRC			= philo_bonus
 
 SRC_MAIN		= $(addprefix $(P_SRC), $(addsuffix .c, $(MAIN)))
+OBJ_MAIN		= $(addprefix $(P_OBJ), $(addsuffix .o, $(MAIN)))
 HEADERS			= $(addprefix $(P_INC), $(addsuffix .h, $(HDR_SRC)))
 
 SRC_ALL			= $(SRC_MAIN)
+OBJ_ALL			= $(OBJ_MAIN)
 
 # ----- RULES ----- #
 
-all: 			$(NAME) 
+all: 			$(NAME)
 
-$(NAME): 		$(SRC_ALL) Makefile $(HEADERS)
-				@$(CC) $(CFLAGS) -I $(P_INC) $(SRC_ALL) -o $@
-				@echo "$(_YELLOW)Compiling $(SRC_ALL)$(_END)"
+$(NAME):		$(OBJ_ALL) Makefile $(HEADERS)
+				@$(CC) $(CFLAGS) -I $(P_INC) $(OBJ_ALL) -o $@
 				@echo "$(_GREEN)$(_BOLD)=> $(NAME) compiled!$(_END)"
+
+$(P_OBJ):
+				@mkdir -p $(P_OBJ)
+
+$(P_OBJ)%.o:	$(P_SRC)%.c Makefile $(HEADERS) | $(P_OBJ)
+				@echo "$(_YELLOW)Compiling $<...$(_END)"
+				@$(CC) $(CFLAGS) -I $(P_INC) -c $< -o $@
 
 # ----- BASIC RULES ----- #
 
 clean:			
-				@rm -rf $(NAME)
+				@rm -rf $(P_OBJ)
 				@echo "$(_CYAN)$(NAME) cleaned!$(_END)"
 
 fclean:
+				@rm -rf $(NAME)
 				@$(MAKE) clean --no-print-directory
+				@echo "$(_CYAN)$(NAME) full cleaned!$(_END)"
 
 re:
 				@$(MAKE) fclean --no-print-directory

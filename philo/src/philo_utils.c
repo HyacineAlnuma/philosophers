@@ -6,60 +6,96 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 16:57:16 by halnuma           #+#    #+#             */
-/*   Updated: 2025/02/28 10:47:26 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/03/31 10:56:11 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	ft_isdigit(int c)
+void	print_state(t_philo *philo, char *action, char *color)
 {
-	if (c < '0' || c > '9')
+	size_t	current;
+	size_t	ts;
+
+	current = get_current_time(philo);
+	ts = current - philo->t_start;
+	pthread_mutex_lock(philo->print_mutex);
+	if (!check_status(philo) && ft_strcmp(action, "died"))
 	{
+		pthread_mutex_unlock(philo->print_mutex);
+		return ;
+	}
+	printf("[%ldms] - %s%d %s%s\n", ts, color, philo->id, action, C_END);
+	pthread_mutex_unlock(philo->print_mutex);
+}
+
+void	destroy_mtx(t_rules *ruleset, t_mutex *forks, t_philo *p, t_monitor *m)
+{
+	int	i;
+
+	i = 0;
+	while (i < ruleset->philo_nb)
+	{
+		pthread_mutex_destroy(&forks[i]);
+		pthread_mutex_destroy(&p[i].time_mutex);
+		i++;
+	}
+	pthread_mutex_destroy(&(m->alive_mutex));
+	pthread_mutex_destroy(&(m->meals_mutex));
+	pthread_mutex_destroy(&(m->print_mutex));
+}
+
+int	check_status(t_philo *philo)
+{
+	pthread_mutex_lock(philo->alive_mutex);
+	pthread_mutex_lock(philo->meals_mutex);
+	if (!(*philo->alive) || *philo->meals_eaten)
+	{
+		pthread_mutex_unlock(philo->meals_mutex);
+		pthread_mutex_unlock(philo->alive_mutex);
 		return (0);
 	}
+	pthread_mutex_unlock(philo->meals_mutex);
+	pthread_mutex_unlock(philo->alive_mutex);
 	return (1);
 }
 
-int	ft_atoi(const char *nptr)
+void	check_if_alive(t_philo *philo)
 {
-	time_t	i;
-	int		sign;
-	int		result;
+	size_t	current;
 
-	sign = 1;
-	i = 0;
-	result = 0;
-	while (nptr[i] == ' ' || (nptr[i] >= 9 && nptr[i] <= 13))
-		i++;
-	if (nptr[i] == '-' || nptr[i] == '+')
+	current = get_current_time(philo);
+	pthread_mutex_lock(&(philo->time_mutex));
+	if ((current - philo->t_last_meal) >= philo->ruleset->t_die)
 	{
-		if (nptr[i] == '-')
-			sign *= -1;
-		i++;
+		pthread_mutex_unlock(&(philo->time_mutex));
+		pthread_mutex_lock(philo->alive_mutex);
+		*philo->alive = 0;
+		pthread_mutex_unlock(philo->alive_mutex);
+		print_state(philo, "died", C_RED);
+		return ;
 	}
-	while (ft_isdigit(nptr[i]))
-	{
-		result = result * 10 + (nptr[i] - '0');
-		i++;
-	}
-	return (result * sign);
+	pthread_mutex_unlock(&(philo->time_mutex));
 }
 
-/* TODO : check nb
-			si < 0 si > ?
-		si time to sleep > time to die error
-*/
-
-void	init_ruleset(t_rules *ruleset, char **av)
+void	check_if_all_meals_eaten(t_philo *philo)
 {
-	ruleset->philo_nb = ft_atoi(av[1]);
-	ruleset->philo_alive = 1;
-	ruleset->t_die = ft_atoi(av[2]);
-	ruleset->t_eat = ft_atoi(av[3]);
-	ruleset->t_sleep = ft_atoi(av[4]);
-	if (av[5])
-		ruleset->meals_nb = ft_atoi(av[5]);
-	else
-		ruleset->meals_nb = 0;
+	int	i;
+
+	i = 0;
+	while (i < philo[0].ruleset->philo_nb)
+	{
+		pthread_mutex_lock(philo->meals_mutex);
+		if (philo[i].meals_nb < philo[0].ruleset->meals_nb)
+		{
+			pthread_mutex_unlock(philo->meals_mutex);
+			return ;
+		}
+		pthread_mutex_unlock(philo->meals_mutex);
+		i++;
+	}
+	pthread_mutex_lock(philo->meals_mutex);
+	*philo->meals_eaten = 1;
+	pthread_mutex_unlock(philo->meals_mutex);
+	return ;
 }

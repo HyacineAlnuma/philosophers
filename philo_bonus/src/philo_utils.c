@@ -6,54 +6,51 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 16:57:16 by halnuma           #+#    #+#             */
-/*   Updated: 2025/02/21 09:19:01 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/04/02 12:35:05 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
 
-int	ft_isdigit(int c)
+void	*death_checker(void *data)
 {
-	if (c < '0' || c > '9')
+	t_philo	*philo;
+	t_death	*death;
+	int		i;
+	size_t	current;
+
+	death = (t_death *)data;
+	philo = &death->monitor->philo[death->index];
+	while (1)
 	{
-		return (0);
+		sem_wait(philo->sems->s_death);
+		current = get_current_time();
+		i = 0;
+		if ((current - philo->t_last_meal) >= philo->ruleset->t_die)
+		{
+			print_state(philo, "died", C_RED);
+			while (i < philo->ruleset->philo_nb)
+			{
+				sem_post(philo->sems->s_meals);
+				i++;
+			}
+			exit(EXIT_SUCCESS);
+		}
+		sem_post(philo->sems->s_death);
 	}
-	return (1);
+	return (NULL);
 }
 
-int	ft_atoi(const char *nptr)
+void	print_state(t_philo *philo, char *action, char *color)
 {
-	int	i;
-	int	sign;
-	int	result;
+	size_t	current;
+	size_t	ts;
 
-	sign = 1;
-	i = 0;
-	result = 0;
-	while (nptr[i] == ' ' || (nptr[i] >= 9 && nptr[i] <= 13))
-		i++;
-	if (nptr[i] == '-' || nptr[i] == '+')
-	{
-		if (nptr[i] == '-')
-			sign *= -1;
-		i++;
-	}
-	while (ft_isdigit(nptr[i]))
-	{
-		result = result * 10 + (nptr[i] - '0');
-		i++;
-	}
-	return (result * sign);
-}
-
-void	init_ruleset(t_rules *ruleset, char **av)
-{
-	ruleset->philo_nb = ft_atoi(av[1]);
-	ruleset->time_to_die = ft_atoi(av[2]);
-	ruleset->time_to_eat = ft_atoi(av[3]);
-	ruleset->time_to_sleep = ft_atoi(av[4]);
-	if (av[5])
-		ruleset->meals_nb = ft_atoi(av[5]);
-	else
-		ruleset->meals_nb = 0;
+	current = get_current_time();
+	ts = current - philo->t_start;
+	sem_wait(philo->sems->s_write);
+	printf("[%ldms] - %s%d %s%s\n", ts, color, philo->id, action, C_END);
+	if (!ft_strcmp(action, "died"))
+		return ;
+	sem_post(philo->sems->s_write);
 }
