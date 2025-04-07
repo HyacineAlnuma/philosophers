@@ -6,13 +6,13 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 16:28:45 by halnuma           #+#    #+#             */
-/*   Updated: 2025/04/02 11:39:02 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/04/07 09:23:44 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	check_args(int ac, char **av, t_rules *ruleset)
+int	check_args(int ac, char **av)
 {
 	int	i;
 	int	j;
@@ -35,10 +35,7 @@ int	check_args(int ac, char **av, t_rules *ruleset)
 		return (0);
 	if ((ac == 6 && ft_atoi(av[5]) == 0)
 		|| ft_atoi(av[1]) == 0)
-	{
-		free(ruleset);
 		return (2);
-	}
 	return (1);
 }
 
@@ -51,14 +48,17 @@ int	main(int ac, char **av)
 		return (1);
 	if (ac == 5 || ac == 6)
 	{
-		if (!check_args(ac, av, ruleset))
+		if (!check_args(ac, av))
 		{
 			ft_putstr_fd("Error: Bad arguments.\n", 2);
 			free(ruleset);
 			return (1);
 		}
-		if (check_args(ac, av, ruleset) == 2)
+		if (check_args(ac, av) == 2)
+		{
+			free(ruleset);
 			return (0);
+		}
 		init_ruleset(ruleset, av);
 		create_threads(ruleset);
 	}

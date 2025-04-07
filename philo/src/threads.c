@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 11:40:08 by halnuma           #+#    #+#             */
-/*   Updated: 2025/03/31 11:01:00 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/04/07 09:35:31 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,20 @@
 
 void	*philo_routine(void *data)
 {
-    t_philo	*philo;
+	t_philo			*philo;
 
-    philo = (t_philo *)data;
-    if (philo->id % 2 != 0)
-        usleep(100);
-    while (check_status(philo))
-    {
-        p_eat(philo);
-        p_sleep(philo);
-        p_think(philo);
-    }
-    return (NULL);
+	philo = (t_philo *)data;
+	if (philo->id % 2 == 0)
+		usleep(1000);
+	philo->t_start = get_current_time(philo);
+	philo->t_last_meal = philo->t_start;
+	while (check_status(philo))
+	{
+		p_eat(philo);
+		p_sleep(philo);
+		p_think(philo);
+	}
+	return (NULL);
 }
 
 void	*monitor_routine(void *data)
