@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 16:30:26 by halnuma           #+#    #+#             */
-/*   Updated: 2025/04/02 12:37:30 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/04/07 09:38:58 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,6 @@ typedef struct s_philo
 	t_rules			*ruleset;
 	pthread_mutex_t	*l_fork;
 	pthread_mutex_t	*r_fork;
-	int				l_fork_index;
-    int				r_fork_index;
 	pthread_mutex_t	*alive_mutex;
 	pthread_mutex_t	time_mutex;
 	pthread_mutex_t	*print_mutex;

@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 11:40:08 by halnuma           #+#    #+#             */
-/*   Updated: 2025/04/07 09:35:31 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/04/07 09:40:59 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@ void	*philo_routine(void *data)
 	philo = (t_philo *)data;
 	if (philo->id % 2 == 0)
 		usleep(1000);
-	philo->t_start = get_current_time(philo);
-	philo->t_last_meal = philo->t_start;
+	// philo->t_start = get_current_time(philo);
+	// philo->t_last_meal = philo->t_start;
 	while (check_status(philo))
 	{
 		p_eat(philo);
@@ -80,17 +80,10 @@ int	launch_philos(t_rules *ruleset, t_monitor *monitor, t_philo *p, t_mutex *f)
 		if (!p_init(&p[i], (i + 1), ruleset))
 			return (0);
 		p_init_bis(&p[i], &f[i], monitor);
-		p[i].l_fork_index = i;
 		if (i == ruleset->philo_nb - 1)
-		{
 			p[i].r_fork = &f[0];
-			p[i].r_fork_index = 0;
-		}
 		else
-		{
 			p[i].r_fork = &f[i + 1];
-			p[i].r_fork_index = i + 1;
-		}
 		if (pthread_create(&p[i].tid, NULL, philo_routine, &p[i]))
 		{
 			ft_putstr_fd("Error: thread creation failed.\n", 2);
