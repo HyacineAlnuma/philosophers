@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 11:40:08 by halnuma           #+#    #+#             */
-/*   Updated: 2025/04/15 10:39:13 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/04/28 10:00:07 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ int	launch_philos(t_rules *ruleset, t_monitor *monitor, t_philo *p, t_mutex *f)
 	while (i < ruleset->philo_nb)
 	{
 		if (!p_init(&p[i], (i + 1), ruleset))
-			return (0);
+			return (i);
 		p_init_bis(&p[i], &f[i], monitor);
 		if (i == ruleset->philo_nb - 1)
 			p[i].r_fork = &f[0];
@@ -84,12 +84,13 @@ int	launch_philos(t_rules *ruleset, t_monitor *monitor, t_philo *p, t_mutex *f)
 			p[i].r_fork = &f[i + 1];
 		if (pthread_create(&p[i].tid, NULL, philo_routine, &p[i]))
 		{
+			monitor->alive = 0;
 			ft_putstr_fd("Error: thread creation failed.\n", 2);
-			return (0);
+			return (i);
 		}
 		i++;
 	}
-	return (1);
+	return (i);
 }
 
 void	create_threads(t_rules *ruleset)
@@ -106,12 +107,9 @@ void	create_threads(t_rules *ruleset)
 	monitor.ruleset = ruleset;
 	if (!init_mtx(&monitor, forks, ruleset))
 		return ;
-	if (!launch_philos(ruleset, &monitor, philo, forks))
-		return ;
-	if (!thread_monitor(&monitor, &monitor_tid))
-		return ;
-	i = -1;
-	while (++i < ruleset->philo_nb)
+	i = launch_philos(ruleset, &monitor, philo, forks);
+	thread_monitor(&monitor, &monitor_tid);
+	while (--i >= 0)
 		pthread_join(philo[i].tid, NULL);
 	destroy_mtx(ruleset, forks, philo, &monitor);
 }
