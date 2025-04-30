@@ -6,15 +6,18 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 11:54:02 by halnuma           #+#    #+#             */
-/*   Updated: 2025/04/07 09:38:34 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/04/15 10:37:04 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	p_eat(t_philo *philo)
+void	lock_forks(t_philo *philo)
 {
-	pthread_mutex_lock(philo->r_fork);
+	if (philo->id % 2 == 0)
+		pthread_mutex_lock(philo->r_fork);
+	else
+		pthread_mutex_lock(philo->l_fork);
 	print_state(philo, "has taken a fork", C_YEL);
 	if (philo->ruleset->philo_nb == 1)
 	{
@@ -26,8 +29,16 @@ void	p_eat(t_philo *philo)
 		print_state(philo, "died", C_RED);
 		return ;
 	}
-	pthread_mutex_lock(philo->l_fork);
+	if (philo->id % 2 == 0)
+		pthread_mutex_lock(philo->l_fork);
+	else
+		pthread_mutex_lock(philo->r_fork);
 	print_state(philo, "has taken a fork", C_YEL);
+}
+
+void	p_eat(t_philo *philo)
+{
+	lock_forks(philo);
 	pthread_mutex_lock(&(philo->time_mutex));
 	philo->t_last_meal = get_current_time(philo);
 	pthread_mutex_unlock(&(philo->time_mutex));
@@ -49,4 +60,5 @@ void	p_sleep(t_philo *philo)
 void	p_think(t_philo *philo)
 {
 	print_state(philo, "is thinking", C_MAG);
+	usleep(500);
 }
