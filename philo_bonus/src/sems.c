@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 11:15:29 by halnuma           #+#    #+#             */
-/*   Updated: 2025/05/05 11:32:04 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/05/05 14:40:16 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	init_sems_ter(t_sem *sems)
 	sems->s_pid = sem_open("/pid", O_CREAT | O_EXCL, 0666, 1);
 	if (sems->s_pid == SEM_FAILED)
 	{
-		perror("sem_open");
+		ft_putstr_fd("sem_open error", 2);
 		sem_close(sems->s_forks);
 		sem_close(sems->s_write);
 		sem_close(sems->s_meals);
@@ -36,7 +36,7 @@ int	init_sems_bis(t_sem *sems)
 	sems->s_meals = sem_open("/meals", O_CREAT | O_EXCL, 0666, 0);
 	if (sems->s_meals == SEM_FAILED)
 	{
-		perror("sem_open");
+		ft_putstr_fd("sem_open error", 2);
 		sem_close(sems->s_forks);
 		sem_close(sems->s_write);
 		sem_unlink("/write");
@@ -46,7 +46,7 @@ int	init_sems_bis(t_sem *sems)
 	sems->s_death = sem_open("/death", O_CREAT | O_EXCL, 0666, 1);
 	if (sems->s_death == SEM_FAILED)
 	{
-		perror("sem_open");
+		ft_putstr_fd("sem_open error", 2);
 		sem_close(sems->s_forks);
 		sem_close(sems->s_write);
 		sem_close(sems->s_meals);
@@ -70,13 +70,13 @@ int	init_sems(t_sem *sems, t_rules *ruleset)
 			);
 	if (sems->s_forks == SEM_FAILED)
 	{
-		perror("sem_open");
+		ft_putstr_fd("sem_open error", 2);
 		return (0);
 	}
 	sems->s_write = sem_open("/write", O_CREAT | O_EXCL, 0666, 1);
 	if (sems->s_write == SEM_FAILED)
 	{
-		perror("sem_open");
+		ft_putstr_fd("sem_open error", 2);
 		sem_close(sems->s_forks);
 		sem_unlink("/forks");
 		return (0);
