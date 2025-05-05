@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 16:30:26 by halnuma           #+#    #+#             */
-/*   Updated: 2025/04/07 09:38:58 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/05/05 10:33:10 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ typedef struct s_philo
 	int				*alive;
 	int				*meals_eaten;
 	size_t			t_start;
+	size_t			t_simu_start;
 	size_t			t_last_meal;
 	t_rules			*ruleset;
 	pthread_mutex_t	*l_fork;
@@ -71,35 +72,42 @@ typedef struct s_monitor
 	int				meals_eaten;
 }	t_monitor;
 
-// Libft
+// ------ LIBFT ------//
+
 int		ft_atoi(const char *nptr);
 int		ft_isdigit(int c);
 int		ft_strcmp(const char *s1, const char *s2);
 void	ft_putstr_fd(char *s, int fd);
 
-//Init
+// ------ INIT ------ //
+
 int		init_mtx(t_monitor *monitor, t_mutex *forks, t_rules *ruleset);
-int		p_init(t_philo *philo, int id, t_rules *ruleset);
+int		p_init(t_philo *philo, int id, t_rules *ruleset, size_t t_start);
 void	p_init_bis(t_philo *philo, t_mutex *fork, t_monitor *monitor);
 void	init_ruleset(t_rules *ruleset, char **av);
 
-//Utils
+// ------ UTILS ------ //
+
 void	destroy_mtx(t_rules *ruleset, t_mutex *forks, t_philo *p, t_monitor *m);
 void	print_state(t_philo *philo, char *action, char *color);
 int		check_status(t_philo *philo);
 void	check_if_alive(t_philo *philo);
 void	check_if_all_meals_eaten(t_philo *philo);
 
-//Time
+// ------ TIME ------ //
+
 size_t	get_current_time(t_philo *philo);
 void	custom_usleep(size_t sleep, t_philo *philo);
+void	sleep_until_start(t_philo *philo);
 
-//Actions
+// ------ ACTIONS ------ //
+
 void	p_eat(t_philo *philo);
 void	p_sleep(t_philo *philo);
 void	p_think(t_philo *philo);
 
-//Threads
+// ------ THREADS ------ //
+
 void	create_threads(t_rules *ruleset);
 
 #endif

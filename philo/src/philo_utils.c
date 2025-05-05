@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 16:57:16 by halnuma           #+#    #+#             */
-/*   Updated: 2025/03/31 10:56:11 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/05/05 10:49:32 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,14 +17,14 @@ void	print_state(t_philo *philo, char *action, char *color)
 	size_t	current;
 	size_t	ts;
 
-	current = get_current_time(philo);
-	ts = current - philo->t_start;
 	pthread_mutex_lock(philo->print_mutex);
 	if (!check_status(philo) && ft_strcmp(action, "died"))
 	{
 		pthread_mutex_unlock(philo->print_mutex);
 		return ;
 	}
+	current = get_current_time(philo);
+	ts = current - philo->t_start;
 	printf("[%ldms] - %s%d %s%s\n", ts, color, philo->id, action, C_END);
 	pthread_mutex_unlock(philo->print_mutex);
 }
@@ -66,7 +66,8 @@ void	check_if_alive(t_philo *philo)
 
 	current = get_current_time(philo);
 	pthread_mutex_lock(&(philo->time_mutex));
-	if ((current - philo->t_last_meal) >= philo->ruleset->t_die)
+	if ((current - philo->t_last_meal) >= philo->ruleset->t_die \
+	&& philo->ruleset->philo_nb > 1)
 	{
 		pthread_mutex_unlock(&(philo->time_mutex));
 		pthread_mutex_lock(philo->alive_mutex);

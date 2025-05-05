@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 10:34:38 by halnuma           #+#    #+#             */
-/*   Updated: 2025/04/02 11:40:01 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/05/05 09:30:37 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ int	ft_atoi(const char *nptr)
 		result = result * 10 + (nptr[i] - '0');
 		i++;
 	}
-	if (result > INT_MAX)
+	if (i > 13 || result > INT_MAX)
 		return (-1);
 	return (result * sign);
 }

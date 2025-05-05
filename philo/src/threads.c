@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 11:40:08 by halnuma           #+#    #+#             */
-/*   Updated: 2025/04/28 10:00:07 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/05/05 10:48:19 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ void	*philo_routine(void *data)
 	t_philo			*philo;
 
 	philo = (t_philo *)data;
+	sleep_until_start(philo);
 	if (philo->id % 2 == 0)
 		usleep(1000);
 	while (check_status(philo))
@@ -34,8 +35,8 @@ void	*monitor_routine(void *data)
 	int			i;
 
 	monitor = (t_monitor *)data;
-	i = 0;
-	while (1)
+	i = -1;
+	while (++i <= monitor->ruleset->philo_nb)
 	{
 		if (i == monitor->ruleset->philo_nb)
 			i = 0;
@@ -52,7 +53,7 @@ void	*monitor_routine(void *data)
 		}
 		pthread_mutex_unlock(&(monitor->alive_mutex));
 		pthread_mutex_unlock(&(monitor->meals_mutex));
-		i++;
+		usleep(100);
 	}
 	return (NULL);
 }
@@ -70,12 +71,14 @@ int	thread_monitor(t_monitor *monitor, pthread_t *monitor_tid)
 
 int	launch_philos(t_rules *ruleset, t_monitor *monitor, t_philo *p, t_mutex *f)
 {
-	int	i;
+	int		i;
+	size_t	t_start;
 
+	t_start = get_current_time(NULL);
 	i = 0;
 	while (i < ruleset->philo_nb)
 	{
-		if (!p_init(&p[i], (i + 1), ruleset))
+		if (!p_init(&p[i], (i + 1), ruleset, t_start))
 			return (i);
 		p_init_bis(&p[i], &f[i], monitor);
 		if (i == ruleset->philo_nb - 1)
