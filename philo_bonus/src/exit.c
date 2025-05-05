@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 10:27:53 by halnuma           #+#    #+#             */
-/*   Updated: 2025/04/02 12:31:47 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/05/05 11:36:29 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,14 @@ void	kill_all_philos(t_monitor *monitor, int bool)
 	{
 		while (++i < monitor->ruleset->philo_nb)
 		{
-			pthread_mutex_lock(&monitor->m_pid);
+			sem_wait(monitor->sems->s_pid);
 			if (monitor->pids[i] != -1)
 				kill(monitor->pids[i], SIGKILL);
-			pthread_mutex_unlock(&monitor->m_pid);
+			sem_post(monitor->sems->s_pid);
 		}
+		sem_close(monitor->sems->s_pid);
+		sem_unlink("/pid");
 	}
-	pthread_mutex_destroy(&monitor->m_pid);
 }
 
 void	close_sems(t_sem *sems)

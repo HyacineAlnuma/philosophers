@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 16:28:45 by halnuma           #+#    #+#             */
-/*   Updated: 2025/04/02 11:38:16 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/05/05 11:41:44 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ int	main(int ac, char **av)
 		if (!check_args(av))
 		{
 			ft_putstr_fd("Error: Bad arguments.\n", 2);
+			free(ruleset);
 			return (1);
 		}
 		if (ac == 6 && ft_atoi(av[5]) == 0)

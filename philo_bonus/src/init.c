@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 10:38:06 by halnuma           #+#    #+#             */
-/*   Updated: 2025/04/02 12:59:29 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/05/05 11:15:50 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,58 +37,6 @@ void	p_init(t_philo *philo, int id, t_rules *ruleset)
 	philo->meals_nb = 0;
 }
 
-int	init_sems_bis(t_sem *sems)
-{
-	sems->s_meals = sem_open("/meals", O_CREAT | O_EXCL, 0666, 0);
-	if (sems->s_meals == SEM_FAILED)
-	{
-		perror("sem_open");
-		sem_close(sems->s_forks);
-		sem_close(sems->s_write);
-		sem_unlink("/write");
-		sem_unlink("/forks");
-		return (0);
-	}
-	sems->s_death = sem_open("/death", O_CREAT | O_EXCL, 0666, 1);
-	if (sems->s_death == SEM_FAILED)
-	{
-		perror("sem_open");
-		sem_close(sems->s_forks);
-		sem_close(sems->s_write);
-		sem_close(sems->s_meals);
-		sem_unlink("/write");
-		sem_unlink("/forks");
-		sem_unlink("/meals");
-		return (0);
-	}
-	return (1);
-}
-
-int	init_sems(t_sem *sems, t_rules *ruleset)
-{
-	sem_unlink("/forks");
-	sem_unlink("/write");
-	sem_unlink("/meals");
-	sem_unlink("/death");
-	sems->s_forks = sem_open(
-			"/forks", O_CREAT | O_EXCL, 0666, ruleset->philo_nb
-			);
-	if (sems->s_forks == SEM_FAILED)
-	{
-		perror("sem_open");
-		return (0);
-	}
-	sems->s_write = sem_open("/write", O_CREAT | O_EXCL, 0666, 1);
-	if (sems->s_write == SEM_FAILED)
-	{
-		perror("sem_open");
-		sem_close(sems->s_forks);
-		sem_unlink("/forks");
-		return (0);
-	}
-	return (init_sems_bis(sems));
-}
-
 int	init_monitor(t_monitor *m, t_philo *philo, t_rules *ruleset, t_sem *sems)
 {
 	int	i;
@@ -97,11 +45,6 @@ int	init_monitor(t_monitor *m, t_philo *philo, t_rules *ruleset, t_sem *sems)
 	m->philo = philo;
 	m->sems = sems;
 	m->ruleset = ruleset;
-	if (pthread_mutex_init(&m->m_pid, NULL))
-	{
-		ft_putstr_fd("Error: mutex init failed.\n", 2);
-		return (0);
-	}
 	i = 0;
 	while (i < PHILO_MAX)
 	{

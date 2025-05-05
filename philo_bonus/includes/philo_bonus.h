@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 16:30:26 by halnuma           #+#    #+#             */
-/*   Updated: 2025/04/02 12:49:48 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/05/05 11:18:04 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ typedef struct s_sem
 	sem_t	*s_write;
 	sem_t	*s_meals;
 	sem_t	*s_death;
+	sem_t	*s_pid;
 }	t_sem;
 
 typedef struct s_philo
@@ -70,7 +71,7 @@ typedef struct s_philo
 
 typedef struct s_monitor
 {
-	pthread_mutex_t	m_pid;
+	// pthread_mutex_t	m_pid;
 	pid_t			pids[PHILO_MAX];
 	t_philo			*philo;
 	t_sem			*sems;
@@ -83,35 +84,41 @@ typedef struct s_death
 	int			index;
 }	t_death;
 
-// Libft
+// ------ LIBFT ------ //
 int		ft_atoi(const char *nptr);
 int		ft_isdigit(int c);
 int		ft_strcmp(const char *s1, const char *s2);
 void	ft_putstr_fd(char *s, int fd);
 
-//Init
+// ------ INIT ------ //
+
 void	p_init(t_philo *philo, int id, t_rules *ruleset);
 void	init_ruleset(t_rules *ruleset, char **av);
 int		init_monitor(t_monitor *m, t_philo *philo, t_rules *r, t_sem *sems);
 int		init_sems(t_sem *sems, t_rules *ruleset);
 
-//Utils
+// ------ UTILS ------ //
+
 void	print_state(t_philo *philo, char *action, char *color);
 void	*death_checker(void *data);
 
-//Time
+// ------ TIME ------ //
+
 size_t	get_current_time(void);
 void	update_time(t_philo *philo);
 
-//Actions
+// ------ ACTIONS ------ //
+
 void	p_eat(t_philo *philo);
 void	p_sleep(t_philo *philo);
 void	p_think(t_philo *philo);
 
-//Process
+// ------ PROCESS ------ //
+
 void	create_processes(t_rules *ruleset);
 
-//Exit
+// ------ EXIT ------ //
+
 void	close_sems(t_sem *sems);
 void	kill_all_philos(t_monitor *monitor, int bool);
 

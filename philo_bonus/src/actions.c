@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 11:54:02 by halnuma           #+#    #+#             */
-/*   Updated: 2025/04/02 11:13:56 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/05/05 10:58:00 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,4 +39,8 @@ void	p_sleep(t_philo *philo)
 void	p_think(t_philo *philo)
 {
 	print_state(philo, "is thinking", C_MAG);
+	if (philo->ruleset->philo_nb % 2 != 0)
+		usleep(philo->ruleset->t_eat * 1000);
+	else
+		usleep(500);
 }

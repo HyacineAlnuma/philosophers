@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 09:30:32 by halnuma           #+#    #+#             */
-/*   Updated: 2025/04/02 12:58:28 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/05/05 11:32:34 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ void	*meals_monitor(void *data)
 			kill_all_philos(monitor, 1);
 			return (NULL);
 		}
+		usleep(100);
 	}
 	return (NULL);
 }
@@ -68,9 +69,9 @@ void	launch_philos(t_philo *philo, t_rules *r, t_monitor *m, t_sem *sems)
 		philo[i].pid = m->pids;
 		philo[i].sems = sems;
 		p_init(&philo[i], (i + 1), r);
-		pthread_mutex_lock(&m->m_pid);
+		sem_wait(philo->sems->s_pid);
 		philo[i].pid[i] = fork();
-		pthread_mutex_unlock(&m->m_pid);
+		sem_post(philo->sems->s_pid);
 		if (philo[i].pid[i] == -1)
 			return ;
 		else if (philo[i].pid[i] == 0)
